@@ -173,7 +173,6 @@ struct arg_io< char[N] >
     }
 };
 
-
 } /* namespace logfw */
 
 #endif /* MADLIFE_arg_io_291116174409_MADLIFE */

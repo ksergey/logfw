@@ -6,6 +6,8 @@
 #define MADLIFE_meta_291116165708_MADLIFE
 
 #include <type_traits>
+#include "string_view.hpp"
+#include "compiler.hpp"
 
 namespace logfw {
 
@@ -108,18 +110,39 @@ struct stringify< list< ch< C >, Rest >, Chars... >
 template<>
 struct stringify< null_type >
 {
-    static const char* const data() { return ""; }
-    static std::size_t size() { return 0; }
+    static __force_inline const char* const data() noexcept
+    {
+        return "";
+    }
+
+    static __force_inline std::size_t size() noexcept
+    {
+        return 0;
+    }
+
+    static __force_inline string_view str() noexcept
+    {
+        return string_view();
+    }
 };
 template< char... Chars >
 struct stringify< null_type, Chars... >
 {
-    static const char* const data()
+    static __force_inline const char* const data() noexcept
     {
         static constexpr const char str[] = {Chars..., '\0'};
         return str;
     }
-    static std::size_t size() { return sizeof...(Chars); }
+
+    static __force_inline std::size_t size() noexcept
+    {
+        return sizeof...(Chars);
+    }
+
+    static __force_inline string_view str() noexcept
+    {
+        return string_view(data(), size());
+    }
 };
 
 } /* namespace logfw */
