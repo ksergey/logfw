@@ -27,3 +27,7 @@
 *.exe
 *.out
 *.app
+
+# my build dirs
+b
+build
