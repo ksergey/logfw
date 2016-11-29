@@ -145,6 +145,18 @@ struct stringify< null_type, Chars... >
     }
 };
 
+/* some helpers */
+template< class T >
+using clear_type = typename std::conditional<
+    std::is_pointer< T >::value,
+    typename std::add_pointer<
+            typename std::remove_cv<
+                    typename std::remove_pointer< T >::type
+                >::type
+        >::type,
+    typename std::remove_cv< T >::type
+>::type;
+
 } /* namespace logfw */
 
 #endif /* MADLIFE_meta_291116165708_MADLIFE */

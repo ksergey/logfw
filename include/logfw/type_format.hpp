@@ -62,7 +62,7 @@ struct type_format< char >
 template< class T >
 __force_inline bool type_format_is(const string_view& str)
 {
-    using raw_type = typename std::remove_cv< T >::type;
+    using raw_type = clear_type< T >;
     using fmt = stringify< typename type_format< raw_type >::type >;
     static string_view format(fmt::data(), fmt::size());
     return format == str;

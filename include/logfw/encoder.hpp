@@ -21,6 +21,12 @@ struct encode_impl<>
     {
         buffer.capacity(offset);
     }
+
+    /* required buffer size */
+    static __force_inline constexpr std::size_t max_bytes_required()
+    {
+        return 0;
+    }
 };
 
 template< class T >
@@ -32,6 +38,12 @@ struct encode_impl< T >
         const std::size_t encoded_size = arg_io< T >::encode(value, buffer, offset);
         /* update buffer capacity */
         buffer.capacity(encoded_size + offset);
+    }
+
+    /* required buffer size */
+    static __force_inline constexpr std::size_t max_bytes_required()
+    {
+        return arg_io< T >::max_bytes_required();
     }
 };
 
@@ -45,6 +57,12 @@ struct encode_impl< T, Args... >
         const std::size_t encoded_size = arg_io< T >::encode(value, buffer, offset);
         /* encode rest args */
         encode_impl< Args... >::encode(args..., buffer, encoded_size + offset);
+    }
+
+    /* required buffer size */
+    static __force_inline constexpr std::size_t max_bytes_required()
+    {
+        return arg_io< T >::max_bytes_required() + encode_impl< Args... >::max_bytes_required();
     }
 };
 
@@ -69,6 +87,13 @@ template< class Format, class... Args >
 __force_inline void encode(atomic_buffer& buffer, const Args&... args)
 {
     return detail::encode_impl< string_view, Args... >::encode(Format::str(), args..., buffer);
+}
+
+/* calculate max buffer size for encoding args */
+template< class... Args >
+__force_inline constexpr std::size_t max_bytes_required()
+{
+    return detail::encode_impl< Args... >::max_bytes_required();
 }
 
 } /* namespace logfw */

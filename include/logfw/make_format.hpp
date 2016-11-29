@@ -14,7 +14,7 @@ namespace detail {
 template< class T, typename FormatSpec >
 struct format_type
 {
-    using raw_type = typename std::remove_cv< T >::type;
+    using raw_type = clear_type< T >;
     /* true if no formating flags was in {} */
     static constexpr const bool empty_spec = std::is_same< FormatSpec, null_type >::value;
 

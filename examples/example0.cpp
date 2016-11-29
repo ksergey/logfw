@@ -24,6 +24,8 @@ inline std::size_t log_impl(char (&dest)[N], const Args&... args)
     //encode< Args... >(buffer, args...);
     std::cout << "format: \"" << format::data() << "\"\n";
     std::cout << "encoded-size: \"" << buffer.capacity() << "\"\n";
+    std::cout << "max-buffer-size: \"" << (max_bytes_required< Args... >()) << "\"\n";
+    std::cout << "max-buffer-size (with fmt): \"" << (max_bytes_required< Args... >() + format::size() + 1) << "\"\n";
     return buffer.capacity();
 }
 
@@ -32,11 +34,18 @@ inline std::size_t log_impl(char (&dest)[N], const Args&... args)
 int main(int argc, char* argv[])
 {
     char buffer[512];
+    const char* test = "ddd###xxx";
 
     log(buffer, "hello {} {}", 123, "world");
     log(buffer, "test!");
     log(buffer, "yahoo! {}", 9999ul);
     log(buffer, "yahoo! {}", 9999l);
+    log(buffer, "yahoo! {} {3.2}", test, 5);
+
+    //using raw_type = clear_type< const char* >;
+    //std::cout << std::is_same< raw_type, char* >::value << '\n';
+    //using fmt = stringify< typename type_format< raw_type >::type >;
+    //std::cout << fmt::data() << "\n";
 
     //std::cout << std::boolalpha << type_format_is< int8_t >("i8") << '\n';
     //std::cout << std::boolalpha << type_format_is< int8_t >("i9") << '\n';
