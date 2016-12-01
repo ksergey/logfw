@@ -75,20 +75,6 @@ __force_inline void encode(atomic_buffer& buffer, const Args&... args)
     return detail::encode_impl< Args... >::encode(args..., buffer);
 }
 
-/* encode args into buffer with format */
-template< class... Args >
-__force_inline void encode(atomic_buffer& buffer, const char* format, const Args&... args)
-{
-    return detail::encode_impl< const char*, Args... >::encode(format, args..., buffer);
-}
-
-/* encode args into buffer with format */
-template< class Format, class... Args >
-__force_inline void encode(atomic_buffer& buffer, const Args&... args)
-{
-    return detail::encode_impl< string_view, Args... >::encode(Format::str(), args..., buffer);
-}
-
 /* calculate max buffer size for encoding args */
 template< class... Args >
 __force_inline constexpr std::size_t max_bytes_required()

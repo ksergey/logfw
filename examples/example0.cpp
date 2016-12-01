@@ -17,10 +17,8 @@ inline std::size_t log_impl(char (&dest)[N], const Args&... args)
 {
     atomic_buffer buffer(dest);
     using format = make_format< String, Args... >;
-    /* encode with format 0 */
-    //encode< Args... >(buffer, format::data(), args...);
-    /* encode with format 1 */
-    encode< format, Args... >(buffer, args...);
+    /* encode with format */
+    encode< string_view, Args... >(buffer, format::str(), args...);
     /* encode without format */
     //encode< Args... >(buffer, args...);
 
