@@ -24,7 +24,7 @@ struct arg_io< T, typename std::enable_if< std::is_arithmetic< T >::value >::typ
     /**
      * return maximum numbers of bytes to store the type in the buffer
      */
-    static constexpr std::size_t max_bytes_required()
+    __force_inline static constexpr std::size_t max_bytes_required()
     {
         return sizeof(T);
     }
@@ -58,7 +58,7 @@ struct arg_io< const char* >
     /**
      * return maximum numbers of bytes to store the type in the buffer
      */
-    static std::size_t max_bytes_required()
+    __force_inline static constexpr std::size_t max_bytes_required()
     {
         return std::numeric_limits< uint8_t >::max() + 1;
     }
@@ -85,7 +85,7 @@ struct arg_io< std::string >
     /**
      * return maximum numbers of bytes to store the type in the buffer
      */
-    static __force_inline std::size_t max_bytes_required()
+    __force_inline static constexpr std::size_t max_bytes_required()
     {
         return std::numeric_limits< uint8_t >::max() + 1;
     }
@@ -112,7 +112,7 @@ struct arg_io< string_view >
     /**
      * return maximum numbers of bytes to store the type in the buffer
      */
-    static std::size_t max_bytes_required()
+    __force_inline static constexpr std::size_t max_bytes_required()
     {
         return std::numeric_limits< uint8_t >::max() + 1;
     }
@@ -153,7 +153,7 @@ struct arg_io< char[N] >
     /**
      * return maximum numbers of bytes to store the type in the buffer
      */
-    static constexpr std::size_t max_bytes_required()
+    __force_inline static constexpr std::size_t max_bytes_required()
     {
         return N;
     }

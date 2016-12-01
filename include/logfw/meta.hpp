@@ -115,7 +115,7 @@ struct stringify< null_type >
         return "";
     }
 
-    static __force_inline std::size_t size() noexcept
+    static __force_inline constexpr std::size_t size() noexcept
     {
         return 0;
     }
@@ -134,7 +134,7 @@ struct stringify< null_type, Chars... >
         return str;
     }
 
-    static __force_inline std::size_t size() noexcept
+    static __force_inline constexpr std::size_t size() noexcept
     {
         return sizeof...(Chars);
     }

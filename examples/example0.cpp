@@ -23,10 +23,14 @@ inline std::size_t log_impl(char (&dest)[N], const Args&... args)
     encode< format, Args... >(buffer, args...);
     /* encode without format */
     //encode< Args... >(buffer, args...);
+
+    static constexpr size_t max_buffer_size = max_bytes_required< Args... >() + format::size() + 1;
+    static_assert( max_buffer_size < 2048, "" );
+
     std::cout << "format: \"" << format::data() << "\"\n";
     std::cout << "encoded-size: \"" << buffer.capacity() << "\"\n";
     std::cout << "max-buffer-size: \"" << (max_bytes_required< Args... >()) << "\"\n";
-    std::cout << "max-buffer-size (with fmt): \"" << (max_bytes_required< Args... >() + format::size() + 1) << "\"\n";
+    std::cout << "max-buffer-size (with fmt): \"" << max_buffer_size << "\"\n";
     return buffer.capacity();
 }
 
