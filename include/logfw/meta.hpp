@@ -110,7 +110,7 @@ struct stringify< list< ch< C >, Rest >, Chars... >
 template<>
 struct stringify< null_type >
 {
-    static __force_inline const char* const data() noexcept
+    static __force_inline char* const data() noexcept
     {
         return "";
     }
@@ -128,7 +128,7 @@ struct stringify< null_type >
 template< char... Chars >
 struct stringify< null_type, Chars... >
 {
-    static __force_inline const char* const data() noexcept
+    static __force_inline char* const data() noexcept
     {
         static constexpr const char str[] = {Chars..., '\0'};
         return str;
