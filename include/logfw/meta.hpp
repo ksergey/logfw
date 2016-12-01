@@ -110,17 +110,17 @@ struct stringify< list< ch< C >, Rest >, Chars... >
 template<>
 struct stringify< null_type >
 {
-    static __force_inline char* const data() noexcept
+    static __force_inline const char* const data()
     {
         return "";
     }
 
-    static __force_inline std::size_t size() noexcept
+    static __force_inline std::size_t size()
     {
         return 0;
     }
 
-    static __force_inline string_view str() noexcept
+    static __force_inline string_view str()
     {
         return string_view();
     }
@@ -128,18 +128,18 @@ struct stringify< null_type >
 template< char... Chars >
 struct stringify< null_type, Chars... >
 {
-    static __force_inline char* const data() noexcept
+    static __force_inline const char* const data()
     {
         static constexpr const char str[] = {Chars..., '\0'};
         return str;
     }
 
-    static __force_inline std::size_t size() noexcept
+    static __force_inline std::size_t size()
     {
         return sizeof...(Chars);
     }
 
-    static __force_inline string_view str() noexcept
+    static __force_inline string_view str()
     {
         return string_view(data(), size());
     }
