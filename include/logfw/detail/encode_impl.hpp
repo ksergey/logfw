@@ -2,20 +2,20 @@
  * Copyright (c) 2016 Sergey Kovalevich <inndie@gmail.com>
  */
 
-#ifndef MADLIFE_arg_io_291116174409_MADLIFE
-#define MADLIFE_arg_io_291116174409_MADLIFE
+#ifndef MADLIFE_encode_impl_021216225339_MADLIFE
+#define MADLIFE_encode_impl_021216225339_MADLIFE
 
 #include <cstring>
 #include <type_traits>
 #include <algorithm>
+#include <stdexcept>
 #include <string>
 #include <limits>
-#include "string_view.hpp"
+#include "../string_view.hpp"
+#include "../compiler.hpp"
 
 namespace logfw {
-
-/** failed decode result */
-static constexpr const std::size_t decode_failed = std::string::npos;
+namespace detail {
 
 /**
  * maximum length of loggable string.
@@ -33,7 +33,7 @@ struct arg_io< T, typename std::enable_if< std::is_arithmetic< T >::value >::typ
     /**
      * return maximum numbers of bytes to store the type in the buffer
      */
-    __force_inline static constexpr std::size_t max_bytes_required()
+    static constexpr std::size_t max_bytes_required()
     {
         return sizeof(T);
     }
@@ -41,7 +41,7 @@ struct arg_io< T, typename std::enable_if< std::is_arithmetic< T >::value >::typ
     /**
      * return numbers of actual bytes required for store the arg
      */
-    __force_inline static constexpr std::size_t bytes_required(__unused const T& value)
+    static constexpr std::size_t bytes_required(__unused const T& value)
     {
         return sizeof(T);
     }
@@ -50,7 +50,7 @@ struct arg_io< T, typename std::enable_if< std::is_arithmetic< T >::value >::typ
      * copy type to buffer.
      * return bytes used
      */
-    static __force_inline std::size_t encode(const T& value, char* buffer)
+    static std::size_t encode(const T& value, char* buffer)
     {
         *reinterpret_cast< T* >(buffer) = value;
         return sizeof(T);
@@ -60,10 +60,10 @@ struct arg_io< T, typename std::enable_if< std::is_arithmetic< T >::value >::typ
      * copy type from buffer.
      * return bytes used
      */
-    static __force_inline std::size_t decode(T& value, const char* buffer, size_t size)
+    static std::size_t decode(T& value, const char* buffer, size_t size)
     {
         if (__unlikely(size < sizeof(T))) {
-            return decode_failed;
+            throw std::runtime_error("buffer too small");
         }
         value = *reinterpret_cast< const T* >(buffer);
         return sizeof(T);
@@ -76,7 +76,7 @@ struct arg_io< const char* >
     /**
      * return maximum numbers of bytes to store the type in the buffer
      */
-    __force_inline static constexpr std::size_t max_bytes_required()
+    static constexpr std::size_t max_bytes_required()
     {
         return string_max_length + 1;
     }
@@ -84,7 +84,7 @@ struct arg_io< const char* >
     /**
      * return numbers of actual bytes required for store the arg
      */
-    __force_inline static std::size_t bytes_required(const char* value)
+    static std::size_t bytes_required(const char* value)
     {
         const std::size_t size = std::min< std::size_t >(std::strlen(value), string_max_length);
         return size + 1;
@@ -96,7 +96,7 @@ struct arg_io< const char* >
      *
      * layout: [str-size][str-bytes]
      */
-    static __force_inline std::size_t encode(const char* value, char* buffer)
+    static std::size_t encode(const char* value, char* buffer)
     {
         const std::size_t size = std::min< std::size_t >(std::strlen(value), string_max_length);
         buffer[0] = uint8_t(size);
@@ -111,7 +111,7 @@ struct arg_io< std::string >
     /**
      * return maximum numbers of bytes to store the type in the buffer
      */
-    __force_inline static constexpr std::size_t max_bytes_required()
+    static constexpr std::size_t max_bytes_required()
     {
         return string_max_length + 1;
     }
@@ -119,7 +119,7 @@ struct arg_io< std::string >
     /**
      * return numbers of actual bytes required for store the arg
      */
-    __force_inline static std::size_t bytes_required(const std::string& value)
+    static std::size_t bytes_required(const std::string& value)
     {
         const std::size_t size = std::min< std::size_t >(value.size(), string_max_length);
         return size + 1;
@@ -131,7 +131,7 @@ struct arg_io< std::string >
      *
      * layout: [str-size][str-bytes]
      */
-    static __force_inline std::size_t encode(const std::string& value, char* buffer)
+    static std::size_t encode(const std::string& value, char* buffer)
     {
         const std::size_t size = std::min< std::size_t >(value.size(), string_max_length);
         buffer[0] = uint8_t(size);
@@ -146,7 +146,7 @@ struct arg_io< string_view >
     /**
      * return maximum numbers of bytes to store the type in the buffer
      */
-    __force_inline static constexpr std::size_t max_bytes_required()
+    static constexpr std::size_t max_bytes_required()
     {
         return string_max_length + 1;
     }
@@ -154,7 +154,7 @@ struct arg_io< string_view >
     /**
      * return numbers of actual bytes required for store the arg
      */
-    __force_inline static std::size_t bytes_required(const string_view& value)
+    static std::size_t bytes_required(string_view value)
     {
         const std::size_t size = std::min< std::size_t >(value.size(), string_max_length);
         return size + 1;
@@ -166,7 +166,7 @@ struct arg_io< string_view >
      *
      * layout: [str-size][str-bytes]
      */
-    static __force_inline std::size_t encode(const string_view& value, char* buffer)
+    static std::size_t encode(string_view value, char* buffer)
     {
         const std::size_t size = std::min< std::size_t >(value.size(), string_max_length);
         buffer[0] = uint8_t(size);
@@ -178,16 +178,16 @@ struct arg_io< string_view >
      * copy type from buffer.
      * return bytes used
      */
-    static __force_inline std::size_t decode(string_view& value,
+    static std::size_t decode(string_view& value,
             const char* buffer, std::size_t size)
     {
         if (__unlikely(size == 0)) {
-            return decode_failed;
+            throw std::runtime_error("buffer too small");
         }
 
         const std::size_t bytes = size_t(buffer[0]);
         if (__unlikely(bytes + 1 < size)) {
-            return decode_failed;
+            throw std::runtime_error("buffer too small");
         }
 
         value = string_view{buffer + 1, bytes};
@@ -204,7 +204,7 @@ struct arg_io< char[N] >
     /**
      * return maximum numbers of bytes to store the type in the buffer
      */
-    __force_inline static constexpr std::size_t max_bytes_required()
+    static constexpr std::size_t max_bytes_required()
     {
         return N;
     }
@@ -212,7 +212,7 @@ struct arg_io< char[N] >
     /**
      * return numbers of actual bytes required for store the arg
      */
-    __force_inline static constexpr std::size_t bytes_required(__unused const char (&value)[N])
+    static constexpr std::size_t bytes_required(__unused const char (&value)[N])
     {
         return N;
     }
@@ -223,7 +223,7 @@ struct arg_io< char[N] >
      *
      * layout: [str-size][str-bytes]
      */
-    static __force_inline std::size_t encode(const char (&value)[N], char* buffer)
+    static std::size_t encode(const char (&value)[N], char* buffer)
     {
         buffer[0] = uint8_t(N - 1);
         std::memcpy(buffer + 1, value, N - 1);
@@ -231,6 +231,76 @@ struct arg_io< char[N] >
     }
 };
 
+template< class... Args >
+struct encode_impl;
+
+template<>
+struct encode_impl<>
+{
+    /* empty args */
+    static std::size_t encode(__unused char* buffer)
+    {
+        return 0;
+    }
+
+    /* required buffer size */
+    static constexpr std::size_t max_bytes_required()
+    {
+        return 0;
+    }
+
+    /* required buffer size */
+    static constexpr std::size_t bytes_required()
+    {
+        return 0;
+    }
+};
+
+template< class T >
+struct encode_impl< T >
+{
+    static std::size_t encode(const T& value, char* buffer)
+    {
+        return arg_io< T >::encode(value, buffer);
+    }
+
+    static constexpr std::size_t max_bytes_required()
+    {
+        return arg_io< T >::max_bytes_required();
+    }
+
+    static std::size_t bytes_required(const T& value)
+    {
+        return arg_io< T >::max_bytes_required(value);
+    }
+};
+
+template< class T, class... Args >
+struct encode_impl< T, Args... >
+{
+    static std::size_t encode(const T& value,
+            const Args&... args, char* buffer)
+    {
+        /* encode type */
+        const std::size_t encoded_size = encode_impl< T >::encode(value, buffer);
+
+        /* encode rest args */
+        return encoded_size + encode_impl< Args... >::encode(args..., buffer + encoded_size);
+    }
+
+    /* required buffer size */
+    static constexpr std::size_t max_bytes_required()
+    {
+        return encode_impl< T >::max_bytes_required() + encode_impl< Args... >::max_bytes_required();
+    }
+
+    static std::size_t bytes_required(const T& value, const Args&... args)
+    {
+        return encode_impl< T >::bytes_required(value) + encode_impl< Args... >::bytes_required(args...);
+    }
+};
+
+} /* namespace detail */
 } /* namespace logfw */
 
-#endif /* MADLIFE_arg_io_291116174409_MADLIFE */
+#endif /* MADLIFE_encode_impl_021216225339_MADLIFE */

@@ -62,18 +62,6 @@ template<>
 struct type_format< float >
 { using type = char_list< 'f' >; };
 
-/**
- * runtime type matching
- */
-template< class T >
-__force_inline bool type_format_is(const string_view& str)
-{
-    using raw_type = clear_type< T >;
-    using fmt = stringify< typename type_format< raw_type >::type >;
-    static string_view format(fmt::data(), fmt::size());
-    return format == str;
-}
-
 } /* namespace logfw */
 
 #endif /* MADLIFE_type_format_291116174657_MADLIFE */
