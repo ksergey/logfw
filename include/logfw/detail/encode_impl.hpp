@@ -186,7 +186,7 @@ struct arg_io< string_view >
         }
 
         const std::size_t bytes = size_t(buffer[0]);
-        if (__unlikely(bytes + 1 < size)) {
+        if (__unlikely(bytes + 1 > size)) {
             throw std::runtime_error("buffer too small");
         }
 
