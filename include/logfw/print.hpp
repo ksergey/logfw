@@ -120,6 +120,18 @@ __force_inline std::size_t print_arg(std::ostream& os, const string_view& spec_t
         string_view arg;
         result = arg_io< string_view >::decode(arg, buffer, offset);
         os << arg;
+    } else if (type_format_is< char >(spec_type)) {
+        char arg;
+        result = arg_io< char >::decode(arg, buffer, offset);
+        os << arg;
+    } else if (type_format_is< double >(spec_type)) {
+        double arg;
+        result = arg_io< double >::decode(arg, buffer, offset);
+        os << arg;
+    } else if (type_format_is< float >(spec_type)) {
+        float arg;
+        result = arg_io< float >::decode(arg, buffer, offset);
+        os << arg;
     } else {
         throw std::runtime_error("unknown format spec \"" + spec_type.to_string() + "\"");
     }

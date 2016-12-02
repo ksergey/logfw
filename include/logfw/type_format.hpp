@@ -55,6 +55,12 @@ struct type_format< string_view >
 template<>
 struct type_format< char >
 { using type = char_list< 'c' >; };
+template<>
+struct type_format< double >
+{ using type = char_list< 'd' >; };
+template<>
+struct type_format< float >
+{ using type = char_list< 'f' >; };
 
 /**
  * runtime type matching
