@@ -50,6 +50,7 @@ int main(int argc, char* argv[])
     std::cout << "formatting result ----------------\n";
     auto used_bytes = log(buffer, "yahoo! \"{50}\" \"{-+10}\"", test, 5);
     print(std::cout, atomic_buffer{buffer, used_bytes});
+    std::cout << '\n';
 
     return 0;
 }

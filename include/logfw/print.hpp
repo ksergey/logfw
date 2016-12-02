@@ -202,8 +202,6 @@ __force_inline void print(std::ostream& os, const string_view& format,
                 break;
         }
     }
-
-    os << '\n';
 }
 
 /**
