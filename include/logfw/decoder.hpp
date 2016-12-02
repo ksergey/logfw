@@ -7,6 +7,7 @@
 
 #include <cassert>
 #include "type_format.hpp"
+#include "detail/encode_impl.hpp"
 
 namespace logfw {
 
