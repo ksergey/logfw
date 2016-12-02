@@ -5,6 +5,7 @@
 #ifndef MADLIFE_print_291116234914_MADLIFE
 #define MADLIFE_print_291116234914_MADLIFE
 
+#if 0
 #include <cctype>
 #include <iostream>
 #include <iomanip>
@@ -77,6 +78,29 @@ __force_inline void apply_format_flags(std::ostream& os, const string_view& flag
     os << std::setprecision(precision);
 }
 
+template< class T >
+__force_inline std::size_t print_if(std::ostream& os, const string_view& type,
+        const string_view& flags, const atomic_buffer& buffer)
+{
+    if (!type_format_is< T >(type)) {
+        return 0;
+    }
+
+    /* decode type */
+    T value;
+    const std::size_t size = arg_io< T >::decode(value, buffer);
+
+    /* save ostream flags */
+    ios_saver saver{os};
+    /* apply formating flags to ostream */
+    apply_format_flags(os, flags);
+    /* write value */
+    os << value;
+
+
+    return size;
+}
+
 __force_inline std::size_t print_arg(std::ostream& os, const string_view& spec_type,
         const string_view& spec_flags, const atomic_buffer& buffer, std::size_t offset = 0)
 {
@@ -140,6 +164,24 @@ __force_inline std::size_t print_arg(std::ostream& os, const string_view& spec_t
 }
 
 } /* namespace detail */
+
+/**
+ * format message into ostream
+ */
+__force_inline void print(std::ostream& os, const string_view& fmt,
+        const char* buffer, size_t size)
+{
+    for (std::size_t i = 0; i < fmt.size(); ++i) {
+        const char ch = fmt[i];
+        if (ch == '{') {
+
+        } else if (ch == '}') {
+
+        } else {
+
+        }
+    }
+}
 
 /**
  * print according to format
@@ -215,5 +257,5 @@ __force_inline void print(std::ostream& os, const atomic_buffer& buffer)
 }
 
 } /* namespace logfw */
-
+#endif
 #endif /* MADLIFE_print_291116234914_MADLIFE */

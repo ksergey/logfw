@@ -17,13 +17,19 @@ template<>
 struct encode_impl<>
 {
     /* empty args */
-    static __force_inline void encode(atomic_buffer& buffer, std::size_t offset = 0)
+    static __force_inline std::size_t encode(__unused char* buffer)
     {
-        buffer.capacity(offset);
+        return 0;
     }
 
     /* required buffer size */
     static __force_inline constexpr std::size_t max_bytes_required()
+    {
+        return 0;
+    }
+
+    /* required buffer size */
+    static __force_inline constexpr std::size_t bytes_required()
     {
         return 0;
     }
@@ -32,37 +38,44 @@ struct encode_impl<>
 template< class T >
 struct encode_impl< T >
 {
-    static __force_inline void encode(const T& value, atomic_buffer& buffer, std::size_t offset = 0)
+    static __force_inline std::size_t encode(const T& value, char* buffer)
     {
-        /* encode type */
-        const std::size_t encoded_size = arg_io< T >::encode(value, buffer, offset);
-        /* update buffer capacity */
-        buffer.capacity(encoded_size + offset);
+        return arg_io< T >::encode(value, buffer);
     }
 
-    /* required buffer size */
     static __force_inline constexpr std::size_t max_bytes_required()
     {
         return arg_io< T >::max_bytes_required();
+    }
+
+    static __force_inline std::size_t bytes_required(const T& value)
+    {
+        return arg_io< T >::max_bytes_required(value);
     }
 };
 
 template< class T, class... Args >
 struct encode_impl< T, Args... >
 {
-    static __force_inline void encode(const T& value, const Args&... args,
-            atomic_buffer& buffer, std::size_t offset = 0)
+    static __force_inline std::size_t encode(const T& value,
+            const Args&... args, char* buffer)
     {
         /* encode type */
-        const std::size_t encoded_size = arg_io< T >::encode(value, buffer, offset);
+        const std::size_t encoded_size = encode_impl< T >::encode(value, buffer);
+
         /* encode rest args */
-        encode_impl< Args... >::encode(args..., buffer, encoded_size + offset);
+        return encoded_size + encode_impl< Args... >::encode(args..., buffer + encoded_size);
     }
 
     /* required buffer size */
     static __force_inline constexpr std::size_t max_bytes_required()
     {
-        return arg_io< T >::max_bytes_required() + encode_impl< Args... >::max_bytes_required();
+        return encode_impl< T >::max_bytes_required() + encode_impl< Args... >::max_bytes_required();
+    }
+
+    static __force_inline std::size_t bytes_required(const T& value, const Args&... args)
+    {
+        return encode_impl< T >::bytes_required(value) + encode_impl< Args... >::bytes_required(args...);
     }
 };
 
@@ -70,7 +83,7 @@ struct encode_impl< T, Args... >
 
 /* encode args into buffer */
 template< class... Args >
-__force_inline void encode(atomic_buffer& buffer, const Args&... args)
+__force_inline std::size_t encode(char* buffer, const Args&... args)
 {
     return detail::encode_impl< Args... >::encode(args..., buffer);
 }
@@ -80,6 +93,13 @@ template< class... Args >
 __force_inline constexpr std::size_t max_bytes_required()
 {
     return detail::encode_impl< Args... >::max_bytes_required();
+}
+
+/* calculate actual buffer size for encoding args */
+template< class... Args >
+__force_inline constexpr std::size_t bytes_required(const Args&... args)
+{
+    return detail::encode_impl< Args... >::bytes_required(args...);
 }
 
 } /* namespace logfw */

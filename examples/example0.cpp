@@ -3,22 +3,20 @@
  */
 
 #include <iostream>
-#include "logfw/atomic_buffer.hpp"
 #include "logfw/make_format.hpp"
 #include "logfw/arg_io.hpp"
 #include "logfw/type_string.hpp"
 #include "logfw/encoder.hpp"
-#include "logfw/print.hpp"
+#include "logfw/fmt.hpp"
 
 using namespace logfw;
 
 template< class String, std::size_t N, class... Args >
-inline std::size_t log_impl(char (&dest)[N], const Args&... args)
+inline std::size_t log_impl(char (&buffer)[N], const Args&... args)
 {
-    atomic_buffer buffer(dest);
     using format = make_format< String, Args... >;
     /* encode with format */
-    encode< string_view, Args... >(buffer, format::str(), args...);
+    std::size_t bytes = encode< Args... >(buffer, args...);
     /* encode without format */
     //encode< Args... >(buffer, args...);
 
@@ -26,31 +24,29 @@ inline std::size_t log_impl(char (&dest)[N], const Args&... args)
     static_assert( max_buffer_size < 2048, "" );
 
     std::cout << "format: \"" << format::data() << "\"\n";
-    std::cout << "encoded-size: \"" << buffer.capacity() << "\"\n";
+    std::cout << "encoded-size: \"" << bytes << "\"\n";
     std::cout << "max-buffer-size: \"" << (max_bytes_required< Args... >()) << "\"\n";
     std::cout << "max-buffer-size (with fmt): \"" << max_buffer_size << "\"\n";
-    return buffer.capacity();
+
+    format_visitor fmt(format::str(), buffer, bytes);
+
+    std::cout << "formatting result: \"" << fmt << "\"\n";
+
+    return bytes;
 }
 
 #define log(buffer, fmt, ...) log_impl< typestring_is(fmt) >(buffer, ##__VA_ARGS__)
 
-int main(int argc, char* argv[])
+int main(__unused int argc, __unused char* argv[])
 {
-    (void) argc;
-    (void) argv;
-
     char buffer[512];
     const char* test = "Paratruper";
 
     log(buffer, "hello {} {}", 123, "world");
     log(buffer, "test!");
+    log(buffer, "test! {}", 123);
     log(buffer, "yahoo! {}", 9999ul);
-    log(buffer, "yahoo! {}", 9999l);
-
-    std::cout << "formatting result ----------------\n";
-    auto used_bytes = log(buffer, "yahoo! \"{50}\" \"{-+10}\"", test, 5);
-    print(std::cout, atomic_buffer{buffer, used_bytes});
-    std::cout << '\n';
+    log(buffer, "yahoo! {} {}", 9999l, test);
 
     return 0;
 }
