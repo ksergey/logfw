@@ -6,7 +6,6 @@
 #define MADLIFE_decoder_021216230550_MADLIFE
 
 #include <cassert>
-#include "type_format.hpp"
 #include "detail/encode_impl.hpp"
 
 namespace logfw {
@@ -43,8 +42,8 @@ public:
     template< class T >
     static bool is(const string_view& str)
     {
-        using raw_type = clear_type< T >;
-        using fmt = stringify< typename type_format< raw_type >::type >;
+        using raw_type = detail::clear_type< T >;
+        using fmt = detail::stringify< typename detail::type_format< raw_type >::type >;
         static string_view format(fmt::data(), fmt::size());
         return format == str;
     }

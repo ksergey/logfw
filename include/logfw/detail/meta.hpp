@@ -6,10 +6,10 @@
 #define MADLIFE_meta_291116165708_MADLIFE
 
 #include <type_traits>
-#include "string_view.hpp"
-#include "compiler.hpp"
+#include "../common.hpp"
 
 namespace logfw {
+namespace detail {
 
 /* null list type */
 struct null_type
@@ -157,6 +157,7 @@ using clear_type = typename std::conditional<
     typename std::remove_cv< T >::type
 >::type;
 
+} /* namespace detail */
 } /* namespace logfw */
 
 #endif /* MADLIFE_meta_291116165708_MADLIFE */

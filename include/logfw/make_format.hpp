@@ -5,7 +5,9 @@
 #ifndef MADLIFE_make_format_291116173253_MADLIFE
 #define MADLIFE_make_format_291116173253_MADLIFE
 
-#include "type_format.hpp"
+#include "common.hpp"
+#include "detail/meta.hpp"
+#include "detail/type_format.hpp"
 
 namespace logfw {
 namespace detail {
@@ -128,7 +130,12 @@ struct format_impl< list< C, StringList >, TypeList >
  * make_format<...>::size() - size of line
  */
 template< class StringHolder, class... Args >
-using make_format = stringify< typename detail::format_impl< string_list< StringHolder >, make_list< Args...> >::type >;
+using make_format = detail::stringify<
+    typename detail::format_impl<
+        detail::string_list< StringHolder >,
+        detail::make_list< Args...>
+    >::type
+>;
 
 } /* namespace logfw */
 

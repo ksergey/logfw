@@ -7,10 +7,11 @@
 
 #include <cstdint>
 #include <string>
-#include "string_view.hpp"
+#include "../common.hpp"
 #include "meta.hpp"
 
 namespace logfw {
+namespace detail {
 
 /* handle compile-time types */
 template< class T >
@@ -62,6 +63,7 @@ template<>
 struct type_format< float >
 { using type = char_list< 'f' >; };
 
+} /* namespace detail */
 } /* namespace logfw */
 
 #endif /* MADLIFE_type_format_291116174657_MADLIFE */

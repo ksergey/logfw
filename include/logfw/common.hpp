@@ -2,8 +2,11 @@
  * Copyright (c) 2016 Sergey Kovalevich <inndie@gmail.com>
  */
 
-#ifndef MADLIFE_compiler_171116173517_MADLIFE
-#define MADLIFE_compiler_171116173517_MADLIFE
+#ifndef MADLIFE_common_041216122507_MADLIFE
+#define MADLIFE_common_041216122507_MADLIFE
+
+#include <experimental/string_view>
+#include "deps/typestring.hh"
 
 #ifndef __force_inline
 #   define __force_inline inline __attribute__((always_inline))
@@ -21,4 +24,14 @@
 #   define __unlikely(x) __builtin_expect(static_cast< bool >(x), false)
 #endif
 
-#endif /* MADLIFE_compiler_171116173517_MADLIFE */
+namespace logfw {
+
+template< char... Chars >
+using type_string = irqus::typestring< Chars... >;
+
+/* c++17 string view */
+using std::experimental::string_view;
+
+} /* namespace logfw */
+
+#endif /* MADLIFE_common_041216122507_MADLIFE */

@@ -7,8 +7,7 @@
 
 #include <iomanip>
 #include "../decoder.hpp"
-#include "../string_view.hpp"
-#include "../compiler.hpp"
+#include "../common.hpp"
 
 namespace logfw {
 namespace detail {

@@ -11,8 +11,7 @@
 #include <stdexcept>
 #include <string>
 #include <limits>
-#include "../string_view.hpp"
-#include "../compiler.hpp"
+#include "../common.hpp"
 
 namespace logfw {
 namespace detail {

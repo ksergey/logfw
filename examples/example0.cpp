@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "logfw/make_format.hpp"
-#include "logfw/type_string.hpp"
+#include "logfw/common.hpp"
 #include "logfw/encoder.hpp"
 #include "logfw/decoder.hpp"
 #include "logfw/write.hpp"
