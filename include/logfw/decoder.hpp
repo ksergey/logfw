@@ -8,6 +8,7 @@
 #include <cassert>
 #include "detail/meta.hpp"
 #include "detail/encode_impl.hpp"
+#include "detail/type_format.hpp"
 
 namespace logfw {
 
