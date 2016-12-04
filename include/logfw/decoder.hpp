@@ -6,6 +6,7 @@
 #define MADLIFE_decoder_021216230550_MADLIFE
 
 #include <cassert>
+#include "detail/meta.hpp"
 #include "detail/encode_impl.hpp"
 
 namespace logfw {
