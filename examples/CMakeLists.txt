@@ -7,4 +7,4 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR "${CMAKE_CXX_COMPILER_ID}" MATCH
 endif()
 
 add_executable(example0 example0.cpp)
-target_link_libraries(example0 logfw)
+target_link_libraries(example0)

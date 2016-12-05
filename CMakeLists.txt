@@ -18,5 +18,6 @@ if (has_parent)
 endif()
 
 if (logfw_BUILD_EXAMPLES)
-    add_subdirectory(examples)
+    include_directories("include")
+    add_subdirectory("examples")
 endif()
