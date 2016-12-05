@@ -9,17 +9,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # options
-option(logfw_BUILD_EXAMPLES "Build library examples" ON)
+option(BUILD_EXAMPLES "Build library examples" ON)
 
-# in case of build in scope of parent project
-get_directory_property(has_parent PARENT_DIRECTORY)
-if (has_parent)
-    set(logfw_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include" PARENT_SCOPE)
-endif()
+# create library entry
+add_library(logfw INTERFACE)
+target_include_directories(logfw INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-if (logfw_BUILD_EXAMPLES)
-    include_directories("include")
-    add_subdirectory("examples")
+if (BUILD_EXAMPLES)
+    message(STATUS "logfw: build examples (yes)")
+    add_subdirectory(examples)
 else()
-    message(STATUS "logfw: build examples off")
+    message(STATUS "logfw: build examples (no)")
 endif()
