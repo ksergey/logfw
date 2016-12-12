@@ -3,6 +3,7 @@
  */
 
 #include <iostream>
+#define USE_TYPESTRING 9
 #include "logfw/make_format.hpp"
 #include "logfw/common.hpp"
 #include "logfw/encoder.hpp"
@@ -49,6 +50,7 @@ int main(__unused int argc, __unused char* argv[])
     log(buffer, "test! {}", 123);
     log(buffer, "yahoo! {}", 9999ul);
     log(buffer, "yahoo! {} {}", 9999l, test);
+    log(buffer, "twime-session: EstablishmentAck [ keepaliveInterval={}, nextSeqNo={} ]", 9999l, test);
 
     return 0;
 }
