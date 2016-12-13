@@ -6,7 +6,6 @@
 #define MADLIFE_common_041216122507_MADLIFE
 
 #include <experimental/string_view>
-#include "deps/typestring.hh"
 
 #ifndef __force_inline
 #   define __force_inline inline __attribute__((always_inline))
@@ -25,9 +24,6 @@
 #endif
 
 namespace logfw {
-
-template< char... Chars >
-using type_string = irqus::typestring< Chars... >;
 
 /* c++17 string view */
 using std::experimental::string_view;

@@ -3,12 +3,13 @@
  */
 
 #include <iostream>
-#define USE_TYPESTRING 9
 #include "logfw/make_format.hpp"
 #include "logfw/common.hpp"
 #include "logfw/encoder.hpp"
 #include "logfw/decoder.hpp"
 #include "logfw/write.hpp"
+#define USE_TYPESTRING 9
+#include "typestring.hh"
 
 using namespace logfw;
 
