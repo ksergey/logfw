@@ -15,6 +15,12 @@ constexpr const_string< N > to_const_string(char const (&a)[N], std::index_seque
     return {{ a[I]... }};
 }
 
+template< std::size_t N, std::size_t... I >
+constexpr const_string< N > to_const_string(char const* a, std::index_sequence< I... >)
+{
+    return {{ a[I]... }};
+}
+
 template< std::size_t N >
 constexpr const_string< N > to_const_string(char const (&a)[N])
 {
@@ -31,37 +37,6 @@ constexpr const_string< 2 > to_const_string(char ch)
 {
     return {{ ch, '\0' }};
 }
-
-#if 0
-template< std::size_t N1, std::size_t... I1, std::size_t N2, std::size_t... I2 >
-constexpr const_string< N1 + N2 - 1 >
-concat(char const (&a1)[N1], char const (&a2)[N2],
-        std::index_sequence< I1... >, std::index_sequence< I2... >)
-{
-    return {{ a1[I1]..., a2[I2]... }};
-}
-
-template< std::size_t N1, std::size_t N2 >
-constexpr const_string< N1 + N2 - 1 >
-concat(char const (&a1)[N1], char const (&a2)[N2])
-{
-    return concat(a1, a2, std::make_index_sequence< N1 - 1 >{}, std::make_index_sequence< N2 >{});
-}
-
-template< std::size_t N, std::size_t... I >
-constexpr const_string< N + 1 >
-concat(char const (&a)[N], char ch, std::index_sequence< I... >)
-{
-    return {{ a[I]..., ch, '\0' }};
-}
-
-template< std::size_t N >
-constexpr const_string< N + 1 >
-concat(char const (&a)[N], char ch)
-{
-    return concat(a, ch, std::make_index_sequence< N - 1 >{});
-}
-#endif
 
 template< std::size_t N1, std::size_t... I1, std::size_t N2, std::size_t... I2 >
 constexpr const_string< N1 + N2 - 1 >
@@ -95,6 +70,7 @@ constexpr auto concat(const Arg0& a0, const Args&... args)
     return concat(a0, concat(args...));
 }
 
+constexpr const char* string_value = "string123";
 constexpr const auto cc0 = concat("=====================hello", " world################3");
 constexpr const auto cc1 = concat("xxxxxx ", 'y');
 constexpr const auto cc2 = concat(cc0, cc1);
