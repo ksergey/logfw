@@ -82,9 +82,9 @@ public:
     }
 
     template< std::size_t M >
-    constexpr static_string< N + M > append(const char (&s)[M]) const
+    constexpr static_string< N + M - 1 > append(const char (&s)[M]) const
     {
-        return append(s, std::make_index_sequence< N >{}, std::make_index_sequence< M >{});
+        return append(s, std::make_index_sequence< N >{}, std::make_index_sequence< M - 1 >{});
     }
 
     template<
@@ -169,6 +169,24 @@ inline std::ostream& operator<<(std::ostream& os, const static_string< N >& s)
 {
     os.write(s.data(), s.size());
     return os;
+}
+
+template< std::size_t N, std::size_t M >
+inline constexpr auto operator+(const static_string< N >& left, const static_string< M >& right)
+{
+    return left.append(right);
+}
+
+template< std::size_t N, std::size_t M >
+inline constexpr auto operator+(const char (&left)[N], const static_string< M >& right)
+{
+    return make_static_string(left).append(right);
+}
+
+template< std::size_t N, std::size_t M >
+inline constexpr auto operator+(const static_string< N >& left, const char (&right)[M])
+{
+    return left.append(right);
 }
 
 } /* namespace ss */

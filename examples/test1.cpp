@@ -129,6 +129,7 @@ constexpr const auto x1 = x0.append(make_static_string("_shit"));
 constexpr const auto x2 = x0.append("_shitty");
 constexpr const auto x3 = make_static_string("-----").push_back('x').push_front('y');
 constexpr const auto x4 = x0.slice< 0, 3 >();
+constexpr const auto x5 = "-" + x4 + x2.tail< 6 >() + "_0-0";
 
 int main()
 {
@@ -152,6 +153,8 @@ int main()
     print(x0.head< 10 >());
     print(x4.tail< 3 >());
     print(x4.head< 3 >());
+    print(x4 + x4 + x4 + "help");
+    print(x5);
 
     return 0;
 }
