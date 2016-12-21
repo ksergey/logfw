@@ -5,6 +5,7 @@
 #ifndef KSERGEY_static_string_211216152515
 #define KSERGEY_static_string_211216152515
 
+#include <string>
 #include <utility>
 #include <type_traits>
 #include <iostream>
@@ -82,9 +83,9 @@ public:
     }
 
     template< std::size_t M >
-    constexpr static_string< N + M - 1 > append(const char (&s)[M]) const
+    constexpr auto append(const char (&s)[M]) const
     {
-        return append(s, std::make_index_sequence< N >{}, std::make_index_sequence< M - 1 >{});
+        return append(static_string< M - 1 >{s});
     }
 
     template<
@@ -94,7 +95,7 @@ public:
     >
     constexpr static_string< Len > slice() const
     {
-        return { data_ + Pos, std::make_index_sequence< Len >{} };
+        return {data_ + Pos, std::make_index_sequence< Len >{}};
     }
 
     template<
@@ -110,17 +111,17 @@ public:
         std::size_t Len = 1,
         class = std::enable_if_t< (Len <= N) >
     >
-    constexpr static_string< Len > head() const
+    constexpr auto head() const
     {
         return slice< 0, Len >();
     }
 
-    constexpr static_string< N + 1 > push_back(char ch) const
+    constexpr auto push_back(char ch) const
     {
         return push_back(ch, std::make_index_sequence< N >{});
     }
 
-    constexpr static_string< N + 1 > push_front(char ch) const
+    constexpr auto push_front(char ch) const
     {
         return push_front(ch, std::make_index_sequence< N >{});
     }
@@ -137,10 +138,24 @@ public:
         return {data_ + 1, std::make_index_sequence< N - 1 >{}};
     }
 
+    template< std::size_t M >
+    constexpr std::size_t find(const static_string< M >& s, std::size_t pos = 0) const
+    {
+        return pos >= N
+            ? std::string::npos
+            : check_substr(pos, 0, s) ? pos : find(s, pos + 1);
+    }
+
+    template< std::size_t M >
+    constexpr std::size_t find(const char (&s)[M], std::size_t pos = 0) const
+    {
+        return find(static_string< M - 1 >{s}, pos);
+    }
+
 private:
-    template< class Str, std::size_t... NI, std::size_t... MI >
-    constexpr static_string< sizeof...(NI) + sizeof...(MI) >
-    append(const Str& s, std::index_sequence< NI... >, std::index_sequence< MI... >) const
+    template< std::size_t M, std::size_t... NI, std::size_t... MI >
+    constexpr static_string< N + M >
+    append(const static_string< M >& s, std::index_sequence< NI... >, std::index_sequence< MI... >) const
     {
         return {data_[NI]..., s[MI]...};
     }
@@ -156,10 +171,19 @@ private:
     {
         return {ch, data_[I]...};
     }
+
+    template< std::size_t M >
+    constexpr bool check_substr(std::size_t index0, std::size_t index1,
+            const static_string< M >& s) const
+    {
+        return index1 == M
+            ? false
+            : data_[index0] == s[index1] ? true : check_substr(index0 + 1, index1 + 1, s);
+    }
 };
 
 template< std::size_t N >
-inline constexpr static_string< N - 1 > make_static_string(const char (&s)[N])
+inline constexpr auto make_static_string(const char (&s)[N])
 {
     return static_string< N - 1 >(s);
 }

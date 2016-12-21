@@ -156,5 +156,8 @@ int main()
     print(x4 + x4 + x4 + "help");
     print(x5);
 
+    std::cout << make_static_string("hello").find("o") << '\n';
+    std::cout << make_static_string("hello").find("h") << '\n';
+
     return 0;
 }
