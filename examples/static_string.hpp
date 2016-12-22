@@ -152,6 +152,13 @@ public:
         return find(static_string< M - 1 >{s}, pos);
     }
 
+    constexpr std::size_t count(char ch, std::size_t pos = 0) const
+    {
+        return (pos < N)
+            ? (data_[pos] == ch ? 1 : 0) + count(ch, pos + 1)
+            : 0;
+    }
+
 private:
     template< std::size_t M, std::size_t... NI, std::size_t... MI >
     constexpr static_string< N + M >

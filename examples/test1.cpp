@@ -158,6 +158,10 @@ int main()
 
     std::cout << make_static_string("hello").find("o") << '\n';
     std::cout << make_static_string("hello").find("h") << '\n';
+    std::cout << "---\n";
+    std::cout << make_static_string("hello").count('h') << '\n';
+    std::cout << make_static_string("hello").count('z') << '\n';
+    std::cout << make_static_string("hello").count('l') << '\n';
 
     return 0;
 }
