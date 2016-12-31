@@ -41,6 +41,15 @@ inline std::size_t log_impl(char (&buffer)[N], const Args&... args)
 
 #define log(buffer, fmt, ...) log_impl< typestring_is(fmt) >(buffer, ##__VA_ARGS__)
 
+/*
+ * instead of using typestring.hh (slow) you can use something like that:
+ * #define log_it(level, fmt, ...) \
+ * { \
+ *      struct format_holder { static constexpr const char* data() { return fmt; } }; \
+ *      log_impl< format_holder >(buffer, ##__VA_ARGS__) \
+ * }
+ */
+
 int main(__unused int argc, __unused char* argv[])
 {
     char buffer[512];
