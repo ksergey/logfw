@@ -8,8 +8,6 @@
 #include "logfw/encoder.hpp"
 #include "logfw/decoder.hpp"
 #include "logfw/write.hpp"
-#define USE_TYPESTRING 9
-#include "typestring.hh"
 
 using namespace logfw;
 
@@ -39,16 +37,11 @@ inline std::size_t log_impl(char (&buffer)[N], const Args&... args)
     return bytes;
 }
 
-#define log(buffer, fmt, ...) log_impl< typestring_is(fmt) >(buffer, ##__VA_ARGS__)
-
-/*
- * instead of using typestring.hh (slow) you can use something like that:
- * #define log_it(level, fmt, ...) \
- * { \
- *      struct format_holder { static constexpr const char* data() { return fmt; } }; \
- *      log_impl< format_holder >(buffer, ##__VA_ARGS__) \
- * }
- */
+#define log(buffer, fmt, ...)                                                           \
+    {                                                                                   \
+        struct format_holder { static constexpr const char* data() { return fmt; } };   \
+        log_impl< format_holder >(buffer, ##__VA_ARGS__);                                \
+    }
 
 int main(__unused int argc, __unused char* argv[])
 {

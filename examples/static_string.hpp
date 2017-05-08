@@ -42,51 +42,33 @@ public:
     {}
 
     constexpr const char* data() const
-    {
-        return data_;
-    }
+    { return data_; }
 
     constexpr std::size_t size() const
-    {
-        return N;
-    }
+    { return N; }
 
     constexpr char operator[](std::size_t pos) const
-    {
-        return data_[pos];
-    }
+    { return data_[pos]; }
 
     constexpr const_iterator begin() const
-    {
-        return data_;
-    }
+    { return data_; }
 
     constexpr const_iterator end() const
-    {
-        return data_ + N;
-    }
+    { return data_ + N; }
 
     constexpr const_iterator cbegin() const
-    {
-        return data_;
-    }
+    { return data_; }
 
     constexpr const_iterator cend() const
-    {
-        return data_ + N;
-    }
+    { return data_ + N; }
 
     template< std::size_t M >
     constexpr static_string< N + M > append(const static_string< M >& s) const
-    {
-        return append(s, std::make_index_sequence< N >{}, std::make_index_sequence< M >{});
-    }
+    { return append(s, std::make_index_sequence< N >{}, std::make_index_sequence< M >{}); }
 
     template< std::size_t M >
     constexpr auto append(const char (&s)[M]) const
-    {
-        return append(static_string< M - 1 >{s});
-    }
+    { return append(static_string< M - 1 >{s}); }
 
     template<
         std::size_t Pos,
@@ -94,49 +76,35 @@ public:
         class = std::enable_if_t< (Pos + Len <= N && Len > 0) >
     >
     constexpr static_string< Len > slice() const
-    {
-        return {data_ + Pos, std::make_index_sequence< Len >{}};
-    }
+    { return {data_ + Pos, std::make_index_sequence< Len >{}}; }
 
     template<
         std::size_t Len = 1,
         class = std::enable_if_t< (Len <= N) >
     >
     constexpr static_string< Len > tail() const
-    {
-        return slice< N - Len, Len >();
-    }
+    { return slice< N - Len, Len >(); }
 
     template<
         std::size_t Len = 1,
         class = std::enable_if_t< (Len <= N) >
     >
     constexpr auto head() const
-    {
-        return slice< 0, Len >();
-    }
+    { return slice< 0, Len >(); }
 
     constexpr auto push_back(char ch) const
-    {
-        return push_back(ch, std::make_index_sequence< N >{});
-    }
+    { return push_back(ch, std::make_index_sequence< N >{}); }
 
     constexpr auto push_front(char ch) const
-    {
-        return push_front(ch, std::make_index_sequence< N >{});
-    }
+    { return push_front(ch, std::make_index_sequence< N >{}); }
 
     template< class = std::enable_if_t< (N > 1) > >
     constexpr static_string< N - 1 > pop_back() const
-    {
-        return {data_, std::make_index_sequence< N - 1 >{}};
-    }
+    { return {data_, std::make_index_sequence< N - 1 >{}}; }
 
     template< class = std::enable_if_t< (N > 1) > >
     constexpr static_string< N - 1 > pop_front() const
-    {
-        return {data_ + 1, std::make_index_sequence< N - 1 >{}};
-    }
+    { return {data_ + 1, std::make_index_sequence< N - 1 >{}}; }
 
     template< std::size_t M >
     constexpr std::size_t find(const static_string< M >& s, std::size_t pos = 0) const
@@ -148,9 +116,7 @@ public:
 
     template< std::size_t M >
     constexpr std::size_t find(const char (&s)[M], std::size_t pos = 0) const
-    {
-        return find(static_string< M - 1 >{s}, pos);
-    }
+    { return find(static_string< M - 1 >{s}, pos); }
 
     constexpr std::size_t count(char ch, std::size_t pos = 0) const
     {
@@ -163,21 +129,15 @@ private:
     template< std::size_t M, std::size_t... NI, std::size_t... MI >
     constexpr static_string< N + M >
     append(const static_string< M >& s, std::index_sequence< NI... >, std::index_sequence< MI... >) const
-    {
-        return {data_[NI]..., s[MI]...};
-    }
+    { return {data_[NI]..., s[MI]...}; }
 
     template< std::size_t... I >
     constexpr static_string< N + 1 > push_back(char ch, std::index_sequence< I... >) const
-    {
-        return {data_[I]..., ch};
-    }
+    { return {data_[I]..., ch}; }
 
     template< std::size_t... I >
     constexpr static_string< N + 1 > push_front(char ch, std::index_sequence< I... >) const
-    {
-        return {ch, data_[I]...};
-    }
+    { return {ch, data_[I]...}; }
 
     template< std::size_t M >
     constexpr bool check_substr(std::size_t index0, std::size_t index1,
@@ -191,9 +151,7 @@ private:
 
 template< std::size_t N >
 inline constexpr auto make_static_string(const char (&s)[N])
-{
-    return static_string< N - 1 >(s);
-}
+{ return static_string< N - 1 >(s); }
 
 template< std::size_t N >
 inline std::ostream& operator<<(std::ostream& os, const static_string< N >& s)
@@ -204,21 +162,15 @@ inline std::ostream& operator<<(std::ostream& os, const static_string< N >& s)
 
 template< std::size_t N, std::size_t M >
 inline constexpr auto operator+(const static_string< N >& left, const static_string< M >& right)
-{
-    return left.append(right);
-}
+{ return left.append(right); }
 
 template< std::size_t N, std::size_t M >
 inline constexpr auto operator+(const char (&left)[N], const static_string< M >& right)
-{
-    return make_static_string(left).append(right);
-}
+{ return make_static_string(left).append(right); }
 
 template< std::size_t N, std::size_t M >
 inline constexpr auto operator+(const static_string< N >& left, const char (&right)[M])
-{
-    return left.append(right);
-}
+{ return left.append(right); }
 
 } /* namespace ss */
 
