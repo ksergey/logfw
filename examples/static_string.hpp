@@ -98,11 +98,11 @@ public:
     constexpr auto push_front(char ch) const
     { return push_front(ch, std::make_index_sequence< N >{}); }
 
-    template< class = std::enable_if_t< (N > 1) > >
+    template< std::size_t M = N, class = std::enable_if_t< (M > 1) > >
     constexpr static_string< N - 1 > pop_back() const
     { return {data_, std::make_index_sequence< N - 1 >{}}; }
 
-    template< class = std::enable_if_t< (N > 1) > >
+    template< std::size_t M = N, class = std::enable_if_t< (M > 1) > >
     constexpr static_string< N - 1 > pop_front() const
     { return {data_ + 1, std::make_index_sequence< N - 1 >{}}; }
 
