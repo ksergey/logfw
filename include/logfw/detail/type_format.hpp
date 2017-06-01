@@ -13,7 +13,7 @@
 namespace logfw {
 namespace detail {
 
-/* handle compile-time types */
+/* Handle compile-time types */
 template< class T >
 struct type_format;
 

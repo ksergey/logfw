@@ -140,7 +140,7 @@ struct arg_io< char[N] >
      *
      * layout: [str-size][str-bytes]
      */
-    static std::size_t encode(const char (&value)[N], char* buffer)
+    static std::size_t encode(const char (&value)[N], char* buffer) noexcept
     {
         buffer[0] = static_cast< uint8_t >(N - 1);
         std::memcpy(buffer + 1, value, N - 1);
@@ -226,8 +226,7 @@ struct encode_impl< T >
 template< class T, class... Args >
 struct encode_impl< T, Args... >
 {
-    static std::size_t encode(const T& value,
-            const Args&... args, char* buffer)
+    static std::size_t encode(const T& value, const Args&... args, char* buffer)
     {
         /* Encode type */
         const std::size_t encoded_size = encode_impl< T >::encode(value, buffer);

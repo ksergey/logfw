@@ -31,8 +31,6 @@ __force_inline void apply_format_flags(std::ostream& os, string_view flags)
             os << std::showpos;
         } else if (flags[idx] == 'x') {
             os << std::hex;
-        } else if (flags[idx] == 'f') {
-            os << std::fixed;
         } else {
             break;
         }
@@ -59,13 +57,18 @@ __force_inline void apply_format_flags(std::ostream& os, string_view flags)
             precision = precision * 10 + (flags[idx] - '0');
             ++idx;
         } else {
-            /* what to do? */
+            /* What to do? */
             return ;
         }
     }
 
-    os << std::setw(width);
-    os << std::setprecision(precision);
+    if (width > 0) {
+        os << std::setw(width);
+    }
+
+    if (precision > 0) {
+        os << std::fixed << std::setprecision(precision);
+    }
 }
 
 
@@ -79,21 +82,21 @@ struct write_if_match_impl
             return false;
         }
 
-        /* decode value */
+        /* Decode value */
         T value;
         d.decode(value);
 
-        /* save ostream flags */
+        /* Save ostream flags */
         std::ios state{nullptr};
         state.copyfmt(os);
 
-        /* apply formating flags to ostream */
+        /* Apply formating flags to ostream */
         apply_format_flags(os, flags);
 
-        /* write value */
+        /* Write value */
         os << value;
 
-        /* restore ostream formating flags */
+        /* Restore ostream formating flags */
         os.copyfmt(state);
 
         return true;
@@ -110,21 +113,21 @@ struct write_if_match_impl< T* >
             return false;
         }
 
-        /* decode value */
+        /* Decode value */
         void* value;
         d.decode(value);
 
-        /* save ostream flags */
+        /* Save ostream flags */
         std::ios state{nullptr};
         state.copyfmt(os);
 
-        /* apply formating flags to ostream */
+        /* Apply formating flags to ostream */
         apply_format_flags(os, flags);
 
-        /* write value */
+        /* Write value */
         os << value;
 
-        /* restore ostream formating flags */
+        /* Restore ostream formating flags */
         os.copyfmt(state);
 
         return true;

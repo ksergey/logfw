@@ -1,24 +1,24 @@
-# logfw
+# LogFW
 > A logger framework
 
-logfw is basis for creating own logging library
+LogFW is basis for creating own logging library
 
-it's provide ability to prepare format string and format arguments in-place and ability to serialize prepared data in separate thread or process
+Provide ability to prepare format string and format arguments in-place and ability to serialize prepared data in separate thread or process
 
-## features
+## Features
 
-* format string pre-processing
-* type safe arguments formatting
-* no overhead in runtime
-* low latency
-* header only
+* Format string pre-processing
+* Type safe arguments formatting
+* No overhead in runtime
+* Low latency
+* Header only
 
-## requirements
+## Requirements
 * c++14 compiler
 
-## build
+## Build
 
-the project is built with *cmake*
+The project is built with *cmake*
 
 ```
 git clone https://github.com/ksergey/logfw.git

@@ -59,7 +59,8 @@ int main(__unused int argc, __unused char* argv[])
     //log(buffer, "twime-session: EstablishmentAck [ keepaliveInterval={}, nextSeqNo={} ]", 9999l, test);
     //log(buffer, "XXXXX {+010.7} {}", 10.03, &x);
     std::cout << &x << '\n';
-    log(buffer, "YYYY {} {} {} {} &x={}, {f.10}", str1, str2, str3, "HAHAHA", &x, 0.00000001);
+    log(buffer, "YYYY {} {} {} {} &x={}, {.8} {} 0x{x} {} {x} '{+10.3}'",
+            str1, str2, str3, "HAHAHA", &x, 0.00000001, 0.00000001, 2555, 0x99, 0x99, 1.5);
 
     return 0;
 }

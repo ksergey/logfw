@@ -12,7 +12,7 @@
 
 namespace logfw {
 
-/** run-time argument decoder */
+/** Runtime argument decoder */
 class decoder
 {
 private:
@@ -28,7 +28,7 @@ public:
         , size_(size)
     {}
 
-    /** decode type */
+    /** Decode type */
     template< class T >
     __force_inline void decode(T& value)
     {
@@ -40,7 +40,7 @@ public:
         size_ -= used;
     }
 
-    /** runtime type matching */
+    /** Runtime type matching */
     template< class T >
     static bool is(const string_view& str)
     {
