@@ -18,28 +18,28 @@ template< class T >
 struct type_format;
 
 template<>
-struct type_format< int8_t >
+struct type_format< std::int8_t >
 { using type = char_list< 'i', '8' >; };
 template<>
-struct type_format< uint8_t >
+struct type_format< std::uint8_t >
 { using type = char_list< 'u', '8' >; };
 template<>
-struct type_format< int16_t >
+struct type_format< std::int16_t >
 { using type = char_list< 'i', '1', '6' >; };
 template<>
-struct type_format< uint16_t >
+struct type_format< std::uint16_t >
 { using type = char_list< 'u', '1', '6' >; };
 template<>
-struct type_format< int32_t >
+struct type_format< std::int32_t >
 { using type = char_list< 'i', '3', '2' >; };
 template<>
-struct type_format< uint32_t >
+struct type_format< std::uint32_t >
 { using type = char_list< 'u', '3', '2' >; };
 template<>
-struct type_format< int64_t >
+struct type_format< std::int64_t >
 { using type = char_list< 'i', '6', '4' >; };
 template<>
-struct type_format< uint64_t >
+struct type_format< std::uint64_t >
 { using type = char_list< 'u', '6', '4' >; };
 template<>
 struct type_format< char* >
@@ -62,6 +62,9 @@ struct type_format< double >
 template<>
 struct type_format< float >
 { using type = char_list< 'f' >; };
+template< class T >
+struct type_format< T* >
+{ using type = char_list< 'p' >; };
 
 } /* namespace detail */
 } /* namespace logfw */

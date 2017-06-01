@@ -12,7 +12,7 @@
 namespace logfw {
 namespace detail {
 
-/* represent a type in char-sequence */
+/* Represent a type in char-sequence */
 template< class T, typename FormatSpec >
 struct format_type
 {
@@ -37,7 +37,7 @@ struct always_false
     : std::false_type
 {};
 
-/* find '}' in charlist sequence */
+/* Find '}' in charlist sequence */
 template< class InputList, class OutputList, std::size_t N >
 struct find_close_brace;
 template< class InputList, class OutputList >
@@ -55,11 +55,11 @@ struct find_close_brace< list< ch< C >, InputList >, OutputList, N >
 template< class OutputList, std::size_t N >
 struct find_close_brace< null_type, OutputList, N >
 {
-    /* make diagnostic easier */
+    /* Make diagnostic easier */
     static_assert( always_false< OutputList >::value, "close brace not found" );
 };
 
-/* format string */
+/* Format string */
 template< class StringList, class TypeList >
 struct format_impl;
 template<>
@@ -77,19 +77,19 @@ struct format_impl< null_type, TypeList >
 template< class StringList, class TypeList >
 struct format_impl< list< ch< '{' >, list< ch< '{' >, StringList > >, TypeList >
 {
-    /* replace {{ -> { */
+    /* Replace {{ -> { */
     using type = list< ch< '{' >, list < ch< '{' >, typename format_impl< StringList, TypeList >::type > >;
 };
 template< class StringList, class TypeList >
 struct format_impl< list< ch< '}' >, list< ch< '}' >, StringList > >, TypeList >
 {
-    /* replace }} -> } */
+    /* Replace }} -> } */
     using type = list< ch< '}' >, list < ch< '}' >, typename format_impl< StringList, TypeList >::type > >;
 };
 template< class StringList, class TypeList >
 struct format_impl< list< ch< '}' >, StringList >, TypeList >
 {
-    /* found close brace without open brace */
+    /* Found close brace without open brace */
     static_assert( always_false< TypeList >::value,
             "Not expected close brace" );
     using type = null_type;
@@ -97,19 +97,19 @@ struct format_impl< list< ch< '}' >, StringList >, TypeList >
 template< class StringList, class TypeList >
 struct format_impl< list< ch< '{' >, StringList >, TypeList >
 {
-    /* found type specifier */
+    /* Found type specifier */
     using close_brace = find_close_brace< StringList, null_type, 1 >;
-    /* format specifier without type, i.e. <flags><width>.<precision> */
+    /* Format specifier without type, i.e. <flags><width>.<precision> */
     using format_spec = typename close_brace::before;
-    /* after close brace string */
+    /* After close brace string */
     using rest = typename close_brace::after;
 
     static_assert( !std::is_same< TypeList, null_type >::value,
-            "not enought argument for formatting string" );
+            "Not enought argument for formatting string" );
 
-    /* get current argument type */
+    /* Get current argument type */
     using T = head_type< TypeList >;
-    /* construct format specifier */
+    /* Construct format specifier */
     using format_string = typename format_type< T, format_spec >::type;
     using format_rest = typename format_impl< rest, tail_type< TypeList > >::type;
     using type = append< format_string, format_rest >;
@@ -124,7 +124,7 @@ struct format_impl< list< C, StringList >, TypeList >
 } /* namespace detail */
 
 /**
- * construct format object.
+ * Construct format object.
  *
  * make_format<...>::data() - const char* line
  * make_format<...>::size() - size of line

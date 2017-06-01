@@ -111,19 +111,13 @@ template<>
 struct stringify< null_type >
 {
     static __force_inline const char* data() noexcept
-    {
-        return "";
-    }
+    { return ""; }
 
     static __force_inline constexpr std::size_t size() noexcept
-    {
-        return 0;
-    }
+    { return 0; }
 
     static __force_inline string_view str() noexcept
-    {
-        return string_view();
-    }
+    { return string_view(); }
 };
 template< char... Chars >
 struct stringify< null_type, Chars... >
@@ -135,14 +129,10 @@ struct stringify< null_type, Chars... >
     }
 
     static __force_inline constexpr std::size_t size() noexcept
-    {
-        return sizeof...(Chars);
-    }
+    { return sizeof...(Chars); }
 
     static __force_inline string_view str() noexcept
-    {
-        return string_view(data(), size());
-    }
+    { return string_view(data(), size()); }
 };
 
 /* some helpers */
