@@ -11,10 +11,6 @@
 #   define __force_inline inline __attribute__((always_inline))
 #endif
 
-#ifndef __unused
-#   define __unused __attribute__((unused))
-#endif
-
 #ifndef __likely
 #   define __likely(x) __builtin_expect(static_cast< bool >(x), true)
 #endif

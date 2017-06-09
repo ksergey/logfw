@@ -34,7 +34,7 @@ struct arg_io< T, typename std::enable_if< std::is_arithmetic< T >::value >::typ
     { return sizeof(T); }
 
     /** Return numbers of actual bytes required for store the arg */
-    static constexpr std::size_t bytes_required(__unused const T& value)
+    static constexpr std::size_t bytes_required(const T& value)
     { return sizeof(T); }
 
     /**
@@ -131,7 +131,7 @@ struct arg_io< char[N] >
     { return N; }
 
     /** Return numbers of actual bytes required for store the arg */
-    static constexpr std::size_t bytes_required(__unused const char (&value)[N])
+    static constexpr std::size_t bytes_required(const char (&value)[N])
     { return N; }
 
     /**
@@ -162,7 +162,7 @@ struct arg_io< T, typename std::enable_if< std::is_pointer< T >::value >::type >
     { return sizeof(ptr_helper); }
 
     /** Return numbers of actual bytes required for store the arg */
-    static constexpr std::size_t bytes_required(__unused const T& value)
+    static constexpr std::size_t bytes_required(const T& value)
     { return sizeof(ptr_helper); }
 
     /**
@@ -198,7 +198,7 @@ template<>
 struct encode_impl<>
 {
     /* Empty args */
-    static std::size_t encode(__unused char* buffer)
+    static std::size_t encode(char* buffer)
     { return 0; }
 
     /* Required buffer size */

@@ -43,7 +43,7 @@ inline std::size_t log_impl(char (&buffer)[N], const Args&... args)
         log_impl< format_holder >(buffer, ##__VA_ARGS__);                               \
     }
 
-int main(__unused int argc, __unused char* argv[])
+int main(int argc, char* argv[])
 {
     char buffer[512];
     const char* str1 = "Paratruper";
