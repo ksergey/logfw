@@ -151,19 +151,13 @@ struct arg_io< char[N] >
 template< class T >
 struct arg_io< T, typename std::enable_if< std::is_pointer< T >::value >::type >
 {
-    union ptr_helper
-    {
-        void* ptr;
-        std::uintptr_t value;
-    };
-
     /** Return maximum numbers of bytes to store the type in the buffer */
     static constexpr std::size_t max_bytes_required()
-    { return sizeof(ptr_helper); }
+    { return sizeof(std::uintptr_t); }
 
     /** Return numbers of actual bytes required for store the arg */
     static constexpr std::size_t bytes_required(const T& value)
-    { return sizeof(ptr_helper); }
+    { return sizeof(std::uintptr_t); }
 
     /**
      * Copy type to buffer.
@@ -171,8 +165,8 @@ struct arg_io< T, typename std::enable_if< std::is_pointer< T >::value >::type >
      */
     static std::size_t encode(T value, char* buffer) noexcept
     {
-        reinterpret_cast< ptr_helper* >(buffer)->ptr = value;
-        return sizeof(ptr_helper);
+        *reinterpret_cast< std::uintptr_t* >(buffer) = reinterpret_cast< std::uintptr_t >(value);
+        return sizeof(std::uintptr_t);
     }
 
     /**
@@ -181,13 +175,12 @@ struct arg_io< T, typename std::enable_if< std::is_pointer< T >::value >::type >
      */
     static std::size_t decode(T& value, const char* buffer, size_t size)
     {
-        if (__unlikely(size < sizeof(ptr_helper))) {
+        if (__unlikely(size < sizeof(std::uintptr_t))) {
             throw std::runtime_error("Buffer too small");
         }
-        ptr_helper helper;
-        helper.value = *reinterpret_cast< const std::uintptr_t* >(buffer);
-        value = helper.ptr;
-        return sizeof(ptr_helper);
+
+        value = reinterpret_cast< const T& >(*reinterpret_cast< const std::uintptr_t* >(buffer));
+        return sizeof(std::uintptr_t);
     }
 };
 
