@@ -18,7 +18,7 @@ namespace detail {
 
 /**
  * Maximum length of loggable string.
- * strings will be trimed in case of greater 256 chars
+ * Strings will be trimed in case of greater 256 chars.
  */
 static constexpr const std::size_t string_max_length = std::numeric_limits< uint8_t >::max();
 
@@ -29,17 +29,21 @@ struct arg_io;
 template< class T >
 struct arg_io< T, typename std::enable_if< std::is_arithmetic< T >::value >::type >
 {
-    /** Return maximum numbers of bytes to store the type in the buffer */
-    static constexpr std::size_t max_bytes_required()
-    { return sizeof(T); }
+    /** @return Maximum numbers of bytes to store the type in the buffer */
+    static constexpr std::size_t max_bytes_required() noexcept
+    {
+        return sizeof(T);
+    }
 
-    /** Return numbers of actual bytes required for store the arg */
-    static constexpr std::size_t bytes_required(const T& value)
-    { return sizeof(T); }
+    /** @return Numbers of actual bytes required for store the arg */
+    static constexpr std::size_t bytes_required(const T& value) noexcept
+    {
+        return sizeof(T);
+    }
 
     /**
      * Copy type to buffer.
-     * @return used bytes
+     * @return Used bytes.
      */
     static std::size_t encode(T value, char* buffer) noexcept
     {
@@ -49,7 +53,7 @@ struct arg_io< T, typename std::enable_if< std::is_arithmetic< T >::value >::typ
 
     /**
      * Copy type from buffer.
-     * @return used bytes
+     * @return Used bytes.
      */
     static std::size_t decode(T& value, const char* buffer, size_t size)
     {
@@ -64,12 +68,14 @@ struct arg_io< T, typename std::enable_if< std::is_arithmetic< T >::value >::typ
 template<>
 struct arg_io< string_view >
 {
-    /** Return maximum numbers of bytes to store the type in the buffer */
-    static constexpr std::size_t max_bytes_required()
-    { return string_max_length + 1; }
+    /** @return Maximum numbers of bytes to store the type in the buffer. */
+    static constexpr std::size_t max_bytes_required() noexcept
+    {
+        return string_max_length + 1;
+    }
 
-    /** Return numbers of actual bytes required for store the arg */
-    static std::size_t bytes_required(string_view value) noexcept
+    /** @return Numbers of actual bytes required for store the arg. */
+    static std::size_t bytes_required(string_view value)
     {
         const std::size_t size = std::min< std::size_t >(value.size(), string_max_length);
         return size + 1;
@@ -77,7 +83,7 @@ struct arg_io< string_view >
 
     /**
      * Copy type to buffer.
-     * @return used bytes
+     * @return Used bytes.
      *
      * layout: [str-size][str-bytes]
      */
@@ -91,10 +97,9 @@ struct arg_io< string_view >
 
     /**
      * Copy type from buffer.
-     * @return used bytes
+     * @return Used bytes.
      */
-    static std::size_t decode(string_view& value,
-            const char* buffer, std::size_t size)
+    static std::size_t decode(string_view& value, const char* buffer, std::size_t size)
     {
         if (__unlikely(size == 0)) {
             throw std::runtime_error("buffer too small");
@@ -127,12 +132,16 @@ struct arg_io< char[N] >
     static_assert( N < 256, "" );
 
     /** Return maximum numbers of bytes to store the type in the buffer */
-    static constexpr std::size_t max_bytes_required()
-    { return N; }
+    static constexpr std::size_t max_bytes_required() noexcept
+    {
+        return N;
+    }
 
     /** Return numbers of actual bytes required for store the arg */
-    static constexpr std::size_t bytes_required(const char (&value)[N])
-    { return N; }
+    static constexpr std::size_t bytes_required(const char (&value)[N]) noexcept
+    {
+        return N;
+    }
 
     /**
      * Copy type to buffer.
@@ -152,12 +161,16 @@ template< class T >
 struct arg_io< T, typename std::enable_if< std::is_pointer< T >::value >::type >
 {
     /** Return maximum numbers of bytes to store the type in the buffer */
-    static constexpr std::size_t max_bytes_required()
-    { return sizeof(std::uintptr_t); }
+    static constexpr std::size_t max_bytes_required() noexcept
+    {
+        return sizeof(std::uintptr_t);
+    }
 
     /** Return numbers of actual bytes required for store the arg */
-    static constexpr std::size_t bytes_required(const T& value)
-    { return sizeof(std::uintptr_t); }
+    static constexpr std::size_t bytes_required(const T& value) noexcept
+    {
+        return sizeof(std::uintptr_t);
+    }
 
     /**
      * Copy type to buffer.
@@ -191,29 +204,41 @@ template<>
 struct encode_impl<>
 {
     /* Empty args */
-    static std::size_t encode(char* buffer)
-    { return 0; }
+    static std::size_t encode(char*) noexcept
+    {
+        return 0;
+    }
 
     /* Required buffer size */
-    static constexpr std::size_t max_bytes_required()
-    { return 0; }
+    static constexpr std::size_t max_bytes_required() noexcept
+    {
+        return 0;
+    }
 
     /* Required buffer size */
-    static constexpr std::size_t bytes_required()
-    { return 0; }
+    static constexpr std::size_t bytes_required() noexcept
+    {
+        return 0;
+    }
 };
 
 template< class T >
 struct encode_impl< T >
 {
     static std::size_t encode(const T& value, char* buffer)
-    { return arg_io< T >::encode(value, buffer); }
+    {
+        return arg_io< T >::encode(value, buffer);
+    }
 
     static constexpr std::size_t max_bytes_required()
-    { return arg_io< T >::max_bytes_required(); }
+    {
+        return arg_io< T >::max_bytes_required();
+    }
 
     static std::size_t bytes_required(const T& value)
-    { return arg_io< T >::max_bytes_required(value); }
+    {
+        return arg_io< T >::max_bytes_required(value);
+    }
 };
 
 template< class T, class... Args >
@@ -230,10 +255,14 @@ struct encode_impl< T, Args... >
 
     /* Required buffer size */
     static constexpr std::size_t max_bytes_required()
-    { return encode_impl< T >::max_bytes_required() + encode_impl< Args... >::max_bytes_required(); }
+    {
+        return encode_impl< T >::max_bytes_required() + encode_impl< Args... >::max_bytes_required();
+    }
 
     static std::size_t bytes_required(const T& value, const Args&... args)
-    { return encode_impl< T >::bytes_required(value) + encode_impl< Args... >::bytes_required(args...); }
+    {
+        return encode_impl< T >::bytes_required(value) + encode_impl< Args... >::bytes_required(args...);
+    }
 };
 
 } /* namespace detail */

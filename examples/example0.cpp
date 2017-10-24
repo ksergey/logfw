@@ -45,6 +45,9 @@ inline std::size_t log_impl(char (&buffer)[N], const Args&... args)
 
 int main(int argc, char* argv[])
 {
+    (void) argc;
+    (void) argv;
+
     char buffer[512];
     const char* str1 = "Paratruper";
     string_view str2 = "Puper";
