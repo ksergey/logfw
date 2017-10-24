@@ -137,7 +137,9 @@ struct write_if_match_impl< T* >
 template< class T >
 __force_inline bool write_if_match(std::ostream& os, string_view type,
         string_view flags, decoder& d)
-{ return write_if_match_impl< T >::run(os, type, flags, d); }
+{
+    return write_if_match_impl< T >::run(os, type, flags, d);
+}
 
 __force_inline void write_arg(std::ostream& os, string_view spec, decoder& d)
 {
