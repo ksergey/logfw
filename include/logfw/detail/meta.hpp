@@ -38,10 +38,14 @@ template< class... Args >
 struct make_list_impl;
 template< class Head, class... Rest >
 struct make_list_impl< Head, Rest... >
-{ using type = list< Head, typename make_list_impl< Rest... >::type >; };
+{
+    using type = list< Head, typename make_list_impl< Rest... >::type >;
+};
 template<>
 struct make_list_impl<>
-{ using type = null_type; };
+{
+    using type = null_type;
+};
 
 /* make typelist from input Args */
 template< class... Args >
@@ -52,16 +56,24 @@ template< class List, class T >
 struct append_impl;
 template<>
 struct append_impl< null_type, null_type >
-{ using type = null_type; };
+{
+    using type = null_type;
+};
 template< class T >
 struct append_impl< null_type, T >
-{ using type = make_list< T >; };
+{
+    using type = make_list< T >;
+};
 template< class Head, class T >
 struct append_impl< null_type, list< Head, T > >
-{ using type = list< Head, T >; };
+{
+    using type = list< Head, T >;
+};
 template< class Head, class Tail, class T >
 struct append_impl< list< Head, Tail >, T >
-{ using type = list< Head, typename append_impl< Tail, T >::type >; };
+{
+    using type = list< Head, typename append_impl< Tail, T >::type >;
+};
 
 /* append type to typelist */
 template< class List, class T >
@@ -76,10 +88,14 @@ struct ch
 /* character list implementation */
 template< char C, char... Chars >
 struct char_list_impl
-{ using type = list< ch< C >, typename char_list_impl< Chars... >::type >; };
+{
+    using type = list< ch< C >, typename char_list_impl< Chars... >::type >;
+};
 template< char C >
 struct char_list_impl< C >
-{ using type = list< ch< C >, null_type >; };
+{
+    using type = list< ch< C >, null_type >;
+};
 
 /* typelist of ch< Char > from input character list */
 template< char... Chars >
@@ -94,7 +110,9 @@ struct string_list_impl
 };
 template< class Str, std::size_t Pos >
 struct string_list_impl< Str, Pos, '\0' >
-{ using type = null_type; };
+{
+    using type = null_type;
+};
 
 /* character accessor from char_list */
 template< class Str >
@@ -110,29 +128,39 @@ struct stringify< list< ch< C >, Rest >, Chars... >
 template<>
 struct stringify< null_type >
 {
-    static __force_inline const char* data() noexcept
-    { return ""; }
+    static LOGFW_FORCE_INLINE const char* data() noexcept
+    {
+        return "";
+    }
 
-    static __force_inline constexpr std::size_t size() noexcept
-    { return 0; }
+    static LOGFW_FORCE_INLINE constexpr std::size_t size() noexcept
+    {
+        return 0;
+    }
 
-    static __force_inline string_view str() noexcept
-    { return string_view(); }
+    static LOGFW_FORCE_INLINE string_view str() noexcept
+    {
+        return {};
+    }
 };
 template< char... Chars >
 struct stringify< null_type, Chars... >
 {
-    static __force_inline const char* data() noexcept
+    static LOGFW_FORCE_INLINE const char* data() noexcept
     {
         static constexpr const char str[] = {Chars..., '\0'};
         return str;
     }
 
-    static __force_inline constexpr std::size_t size() noexcept
-    { return sizeof...(Chars); }
+    static LOGFW_FORCE_INLINE constexpr std::size_t size() noexcept
+    {
+        return sizeof...(Chars);
+    }
 
-    static __force_inline string_view str() noexcept
-    { return string_view(data(), size()); }
+    static LOGFW_FORCE_INLINE string_view str() noexcept
+    {
+        return {data(), size()};
+    }
 };
 
 /* some helpers */

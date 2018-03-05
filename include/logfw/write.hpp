@@ -14,7 +14,7 @@ namespace logfw {
 /**
  * serialize format string into ostream
  */
-__force_inline void write(std::ostream& os, string_view fmt, const char* buffer, size_t size)
+LOGFW_FORCE_INLINE void write(std::ostream& os, string_view fmt, const char* buffer, size_t size)
 {
     /* argument decoder */
     decoder dec{buffer, size};
@@ -22,7 +22,7 @@ __force_inline void write(std::ostream& os, string_view fmt, const char* buffer,
     for (std::size_t index = 0; index < fmt.size(); ++index) {
         char ch = fmt[index];
 
-        if (__unlikely(ch == '{')) {
+        if (ch == '{') {
 
             if (detail::next_is< '{' >(fmt, index)) {
                 ++index;
@@ -30,7 +30,7 @@ __force_inline void write(std::ostream& os, string_view fmt, const char* buffer,
             } else {
                 /* find close brace */
                 auto found = fmt.find('}', index + 1);
-                if (__unlikely(found == std::string::npos)) {
+                if (LOGFW_UNLIKELY(found == std::string::npos)) {
                     throw std::runtime_error("format error (close brace not found)");
                 }
 
@@ -41,9 +41,9 @@ __force_inline void write(std::ostream& os, string_view fmt, const char* buffer,
                 index = found;
             }
 
-        } else if (__unlikely(ch == '}')) {
+        } else if (ch == '}') {
 
-            if (detail::next_is< '}' >(fmt, index)) {
+            if (LOGFW_LIKELY(detail::next_is< '}' >(fmt, index))) {
                 ++index;
                 os << ch;
             } else {

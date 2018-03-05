@@ -45,7 +45,7 @@ struct arg_io< T, typename std::enable_if< std::is_arithmetic< T >::value >::typ
      * Copy type to buffer.
      * @return Used bytes.
      */
-    __force_inline static std::size_t encode(T value, char* buffer) noexcept
+    LOGFW_FORCE_INLINE static std::size_t encode(T value, char* buffer) noexcept
     {
         *reinterpret_cast< T* >(buffer) = value;
         return sizeof(T);
@@ -55,9 +55,9 @@ struct arg_io< T, typename std::enable_if< std::is_arithmetic< T >::value >::typ
      * Copy type from buffer.
      * @return Used bytes.
      */
-    __force_inline static std::size_t decode(T& value, const char* buffer, size_t size)
+    LOGFW_FORCE_INLINE static std::size_t decode(T& value, const char* buffer, size_t size)
     {
-        if (__unlikely(size < sizeof(T))) {
+        if (LOGFW_UNLIKELY(size < sizeof(T))) {
             throw std::runtime_error("Buffer too small");
         }
         value = *reinterpret_cast< const T* >(buffer);
@@ -75,7 +75,7 @@ struct arg_io< string_view >
     }
 
     /** @return Numbers of actual bytes required for store the arg. */
-    __force_inline static std::size_t bytes_required(string_view value)
+    LOGFW_FORCE_INLINE static std::size_t bytes_required(string_view value)
     {
         const std::size_t size = std::min< std::size_t >(value.size(), string_max_length);
         return size + 1;
@@ -87,7 +87,7 @@ struct arg_io< string_view >
      *
      * layout: [str-size][str-bytes]
      */
-    __force_inline static std::size_t encode(string_view value, char* buffer) noexcept
+    LOGFW_FORCE_INLINE static std::size_t encode(string_view value, char* buffer) noexcept
     {
         const std::size_t size = std::min< std::size_t >(value.size(), string_max_length);
         buffer[0] = uint8_t(size);
@@ -99,14 +99,14 @@ struct arg_io< string_view >
      * Copy type from buffer.
      * @return Used bytes.
      */
-    __force_inline static std::size_t decode(string_view& value, const char* buffer, std::size_t size)
+    LOGFW_FORCE_INLINE static std::size_t decode(string_view& value, const char* buffer, std::size_t size)
     {
-        if (__unlikely(size == 0)) {
+        if (LOGFW_UNLIKELY(size == 0)) {
             throw std::runtime_error("buffer too small");
         }
 
         const std::size_t bytes = size_t(buffer[0]);
-        if (__unlikely(bytes + 1 > size)) {
+        if (LOGFW_UNLIKELY(bytes + 1 > size)) {
             throw std::runtime_error("buffer too small");
         }
 
@@ -149,7 +149,7 @@ struct arg_io< char[N] >
      *
      * layout: [str-size][str-bytes]
      */
-    __force_inline static std::size_t encode(const char (&value)[N], char* buffer) noexcept
+    LOGFW_FORCE_INLINE static std::size_t encode(const char (&value)[N], char* buffer) noexcept
     {
         buffer[0] = static_cast< uint8_t >(N - 1);
         std::memcpy(buffer + 1, value, N - 1);
@@ -176,7 +176,7 @@ struct arg_io< T, typename std::enable_if< std::is_pointer< T >::value >::type >
      * Copy type to buffer.
      * @return used bytes
      */
-    __force_inline static std::size_t encode(T value, char* buffer) noexcept
+    LOGFW_FORCE_INLINE static std::size_t encode(T value, char* buffer) noexcept
     {
         *reinterpret_cast< std::uintptr_t* >(buffer) = reinterpret_cast< std::uintptr_t >(value);
         return sizeof(std::uintptr_t);
@@ -186,9 +186,9 @@ struct arg_io< T, typename std::enable_if< std::is_pointer< T >::value >::type >
      * Copy type from buffer.
      * @return used bytes
      */
-    __force_inline static std::size_t decode(T& value, const char* buffer, size_t size)
+    LOGFW_FORCE_INLINE static std::size_t decode(T& value, const char* buffer, size_t size)
     {
-        if (__unlikely(size < sizeof(std::uintptr_t))) {
+        if (LOGFW_UNLIKELY(size < sizeof(std::uintptr_t))) {
             throw std::runtime_error("Buffer too small");
         }
 
@@ -225,7 +225,7 @@ struct encode_impl<>
 template< class T >
 struct encode_impl< T >
 {
-    __force_inline static std::size_t encode(const T& value, char* buffer)
+    LOGFW_FORCE_INLINE static std::size_t encode(const T& value, char* buffer)
     {
         return arg_io< T >::encode(value, buffer);
     }
@@ -235,7 +235,7 @@ struct encode_impl< T >
         return arg_io< T >::max_bytes_required();
     }
 
-    __force_inline static std::size_t bytes_required(const T& value)
+    LOGFW_FORCE_INLINE static std::size_t bytes_required(const T& value)
     {
         return arg_io< T >::max_bytes_required(value);
     }
@@ -244,7 +244,7 @@ struct encode_impl< T >
 template< class T, class... Args >
 struct encode_impl< T, Args... >
 {
-    __force_inline static std::size_t encode(const T& value, const Args&... args, char* buffer)
+    LOGFW_FORCE_INLINE static std::size_t encode(const T& value, const Args&... args, char* buffer)
     {
         /* Encode type */
         const std::size_t encoded_size = encode_impl< T >::encode(value, buffer);
@@ -259,7 +259,7 @@ struct encode_impl< T, Args... >
         return encode_impl< T >::max_bytes_required() + encode_impl< Args... >::max_bytes_required();
     }
 
-    __force_inline static std::size_t bytes_required(const T& value, const Args&... args)
+    LOGFW_FORCE_INLINE static std::size_t bytes_required(const T& value, const Args&... args)
     {
         return encode_impl< T >::bytes_required(value) + encode_impl< Args... >::bytes_required(args...);
     }

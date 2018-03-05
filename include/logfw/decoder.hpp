@@ -30,7 +30,7 @@ public:
 
     /** Decode type */
     template< class T >
-    __force_inline void decode(T& value)
+    LOGFW_FORCE_INLINE void decode(T& value)
     {
         const std::size_t used = detail::arg_io< T >::decode(value, buffer_, size_);
 

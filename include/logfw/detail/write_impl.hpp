@@ -13,13 +13,13 @@ namespace logfw {
 namespace detail {
 
 template< char Ch >
-__force_inline bool next_is(const string_view& str, std::size_t index)
+LOGFW_FORCE_INLINE bool next_is(const string_view& str, std::size_t index)
 {
     ++index;
     return index < str.size() ? str[index] == Ch : false;
 }
 
-__force_inline void apply_format_flags(std::ostream& os, string_view flags)
+LOGFW_FORCE_INLINE void apply_format_flags(std::ostream& os, string_view flags)
 {
     std::size_t idx = 0;
     while (idx < flags.size()) {
@@ -75,7 +75,7 @@ __force_inline void apply_format_flags(std::ostream& os, string_view flags)
 template< class T >
 struct write_if_match_impl
 {
-    __force_inline static bool run(std::ostream& os, string_view type,
+    LOGFW_FORCE_INLINE static bool run(std::ostream& os, string_view type,
             string_view flags, decoder& d)
     {
         if (!d.is< T >(type)) {
@@ -106,7 +106,7 @@ struct write_if_match_impl
 template< class T >
 struct write_if_match_impl< T* >
 {
-    __force_inline static bool run(std::ostream& os, string_view type,
+    LOGFW_FORCE_INLINE static bool run(std::ostream& os, string_view type,
             string_view flags, decoder& d)
     {
         if (!d.is< T* >(type)) {
@@ -135,13 +135,13 @@ struct write_if_match_impl< T* >
 };
 
 template< class T >
-__force_inline bool write_if_match(std::ostream& os, string_view type,
+LOGFW_FORCE_INLINE bool write_if_match(std::ostream& os, string_view type,
         string_view flags, decoder& d)
 {
     return write_if_match_impl< T >::run(os, type, flags, d);
 }
 
-__force_inline void write_arg(std::ostream& os, string_view spec, decoder& d)
+LOGFW_FORCE_INLINE void write_arg(std::ostream& os, string_view spec, decoder& d)
 {
     /* find type:spec delimiter */
     auto found = spec.find(':');
@@ -170,7 +170,7 @@ __force_inline void write_arg(std::ostream& os, string_view spec, decoder& d)
         write_if_match< string_view >(os, type, flags, d) ||
         write_if_match< void* >(os, type, flags, d);
 
-    if (__unlikely(!printed)) {
+    if (LOGFW_UNLIKELY(!printed)) {
         throw std::runtime_error("unknown format type");
     }
 }
