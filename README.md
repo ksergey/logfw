@@ -14,7 +14,7 @@ Provide ability to prepare format string and format arguments in-place and abili
 * Header only
 
 ## Requirements
-* c++14 compiler
+* c++17 compiler
 
 ## Build
 

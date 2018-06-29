@@ -1,15 +1,16 @@
-/*
- * Copyright (c) 2016 Sergey Kovalevich <inndie@gmail.com>
- */
+// ------------------------------------------------------------
+// Copyright (c) 2016-2018 Sergey Kovalevich <inndie@gmail.com>
+// ------------------------------------------------------------
 
 #ifndef MADLIFE_meta_291116165708_MADLIFE
 #define MADLIFE_meta_291116165708_MADLIFE
 
+#include <string_view>
 #include <type_traits>
-#include "../common.hpp"
 
-namespace logfw {
-namespace detail {
+#include "../compiler.hpp"
+
+namespace logfw::detail {
 
 /* null list type */
 struct null_type
@@ -138,7 +139,7 @@ struct stringify< null_type >
         return 0;
     }
 
-    static LOGFW_FORCE_INLINE string_view str() noexcept
+    static LOGFW_FORCE_INLINE constexpr std::string_view str() noexcept
     {
         return {};
     }
@@ -157,7 +158,7 @@ struct stringify< null_type, Chars... >
         return sizeof...(Chars);
     }
 
-    static LOGFW_FORCE_INLINE string_view str() noexcept
+    static LOGFW_FORCE_INLINE std::string_view str() noexcept
     {
         return {data(), size()};
     }
@@ -165,17 +166,12 @@ struct stringify< null_type, Chars... >
 
 /* some helpers */
 template< class T >
-using clear_type = typename std::conditional<
-    std::is_pointer< T >::value,
-    typename std::add_pointer<
-            typename std::remove_cv<
-                    typename std::remove_pointer< T >::type
-                >::type
-        >::type,
-    typename std::remove_cv< T >::type
->::type;
+using clear_type = std::conditional_t<
+    std::is_pointer_v< T >,
+        std::add_pointer_t< std::remove_cv_t< std::remove_pointer_t< T > > >,
+        std::remove_cv_t< T >
+>;
 
-} /* namespace detail */
-} /* namespace logfw */
+} // namespace logfw::detail
 
 #endif /* MADLIFE_meta_291116165708_MADLIFE */

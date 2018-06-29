@@ -1,20 +1,20 @@
-/*
- * Copyright (c) 2016 Sergey Kovalevich <inndie@gmail.com>
- */
+// ------------------------------------------------------------
+// Copyright (c) 2016-2018 Sergey Kovalevich <inndie@gmail.com>
+// ------------------------------------------------------------
 
-#ifndef MADLIFE_write_031216001732_MADLIFE
-#define MADLIFE_write_031216001732_MADLIFE
+#ifndef KSERGEY_write_290618133356
+#define KSERGEY_write_290618133356
 
 #include <iostream>
-#include "detail/write_impl.hpp"
+
+#include "compiler.hpp"
 #include "decoder.hpp"
+#include "detail/write_impl.hpp"
 
 namespace logfw {
 
-/**
- * serialize format string into ostream
- */
-LOGFW_FORCE_INLINE void write(std::ostream& os, string_view fmt, const char* buffer, size_t size)
+/// Serialize format string into ostream
+LOGFW_FORCE_INLINE void write(std::ostream& os, std::string_view fmt, const char* buffer, size_t size)
 {
     /* argument decoder */
     decoder dec{buffer, size};
@@ -30,7 +30,7 @@ LOGFW_FORCE_INLINE void write(std::ostream& os, string_view fmt, const char* buf
             } else {
                 /* find close brace */
                 auto found = fmt.find('}', index + 1);
-                if (LOGFW_UNLIKELY(found == std::string::npos)) {
+                if (LOGFW_UNLIKELY(found == std::string_view::npos)) {
                     throw std::runtime_error("format error (close brace not found)");
                 }
 
@@ -58,4 +58,4 @@ LOGFW_FORCE_INLINE void write(std::ostream& os, string_view fmt, const char* buf
 
 } /* namespace logfw */
 
-#endif /* MADLIFE_write_031216001732_MADLIFE */
+#endif /* KSERGEY_write_290618133356 */

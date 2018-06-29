@@ -1,11 +1,10 @@
-/*
- * Copyright (c) 2016 Sergey Kovalevich <inndie@gmail.com>
- */
+// ------------------------------------------------------------
+// Copyright (c) 2016-2018 Sergey Kovalevich <inndie@gmail.com>
+// ------------------------------------------------------------
 
 #ifndef MADLIFE_make_format_291116173253_MADLIFE
 #define MADLIFE_make_format_291116173253_MADLIFE
 
-#include "common.hpp"
 #include "detail/meta.hpp"
 #include "detail/type_format.hpp"
 
@@ -23,7 +22,7 @@ struct format_type
     /* fmt0="{type" */
     using fmt0 = append< char_list< '{' >, typename type_format< raw_type >::type >;
     /* fmt1="{type:" or fmt1="{type" */
-    using fmt1 = typename std::conditional< empty_spec, fmt0, append< fmt0, ch< ':' > > >::type;
+    using fmt1 = std::conditional_t< empty_spec, fmt0, append< fmt0, ch< ':' > > >;
     /* fmt2="{type:spec" or fmt2="{type" */
     using fmt2 = append< fmt1, FormatSpec >;
 
@@ -104,8 +103,7 @@ struct format_impl< list< ch< '{' >, StringList >, TypeList >
     /* After close brace string */
     using rest = typename close_brace::after;
 
-    static_assert( !std::is_same< TypeList, null_type >::value,
-            "Not enought argument for formatting string" );
+    static_assert( !std::is_same_v< TypeList, null_type >, "Not enought argument for formatting string" );
 
     /* Get current argument type */
     using T = head_type< TypeList >;

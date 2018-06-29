@@ -1,11 +1,12 @@
-/*
- * Copyright (c) 2016 Sergey Kovalevich <inndie@gmail.com>
- */
+// ------------------------------------------------------------
+// Copyright (c) 2016-2018 Sergey Kovalevich <inndie@gmail.com>
+// ------------------------------------------------------------
 
 #ifndef MADLIFE_decoder_021216230550_MADLIFE
 #define MADLIFE_decoder_021216230550_MADLIFE
 
 #include <cassert>
+
 #include "detail/meta.hpp"
 #include "detail/encode_impl.hpp"
 #include "detail/type_format.hpp"
@@ -42,11 +43,11 @@ public:
 
     /** Runtime type matching */
     template< class T >
-    static bool is(const string_view& str)
+    static bool is(std::string_view str)
     {
         using raw_type = detail::clear_type< T >;
         using fmt = detail::stringify< typename detail::type_format< raw_type >::type >;
-        static string_view format(fmt::data(), fmt::size());
+        static std::string_view format(fmt::data(), fmt::size());
         return format == str;
     }
 };

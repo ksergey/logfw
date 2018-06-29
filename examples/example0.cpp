@@ -1,10 +1,9 @@
-/*
- * Copyright (c) 2016 Sergey Kovalevich <inndie@gmail.com>
- */
+// ------------------------------------------------------------
+// Copyright (c) 2016-2018 Sergey Kovalevich <inndie@gmail.com>
+// ------------------------------------------------------------
 
 #include <iostream>
 #include "logfw/make_format.hpp"
-#include "logfw/common.hpp"
 #include "logfw/encoder.hpp"
 #include "logfw/decoder.hpp"
 #include "logfw/write.hpp"
@@ -43,24 +42,21 @@ inline std::size_t log_impl(char (&buffer)[N], const Args&... args)
         log_impl< format_holder >(buffer, ##__VA_ARGS__);                               \
     }
 
-int main(int argc, char* argv[])
+int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
-    (void) argc;
-    (void) argv;
-
     char buffer[512];
     const char* str1 = "Paratruper";
-    string_view str2 = "Puper";
+    std::string_view str2 = "Puper";
     std::string str3 = "Duper";
     int x = 5;
 
-    //log(buffer, "hello {} {}", 123, "world");
-    //log(buffer, "test!");
-    //log(buffer, "test! {}", 123);
-    //log(buffer, "yahoo! {}", 9999ul);
-    //log(buffer, "yahoo! {} {}", 9999l, test);
-    //log(buffer, "twime-session: EstablishmentAck [ keepaliveInterval={}, nextSeqNo={} ]", 9999l, test);
-    //log(buffer, "XXXXX {+010.7} {}", 10.03, &x);
+    // log(buffer, "hello {} {}", 123, "world");
+    // log(buffer, "test! {}", 123);
+    // log(buffer, "yahoo! {}", 9999ul);
+    // log(buffer, "yahoo! {} {}", 9999l, str2);
+    // log(buffer, "twime-session: EstablishmentAck [ keepaliveInterval={}, nextSeqNo={} ]", 9999l, str2);
+    // log(buffer, "XXXXX {+010.7} {}", 10.03, &x);
+
     std::cout << &x << '\n';
     log(buffer, "YYYY {} {} {} {} &x={}, {.8} {} 0x{x} {} {x} '{+10.3}'",
             str1, str2, str3, "HAHAHA", &x, 0.00000001, 0.00000001, 2555, 0x99, 0x99, 1.5);

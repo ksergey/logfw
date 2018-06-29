@@ -15,7 +15,7 @@ option(LogFW_BUILD_EXAMPLES "Build library examples" ON)
 add_library(logfw INTERFACE)
 add_library(ksergey::logfw ALIAS logfw)
 target_include_directories(logfw INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_compile_features(logfw INTERFACE cxx_std_14)
+target_compile_features(logfw INTERFACE cxx_std_17)
 
 if (LogFW_BUILD_EXAMPLES)
     add_subdirectory(examples)

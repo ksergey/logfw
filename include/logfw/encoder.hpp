@@ -1,6 +1,6 @@
-/*
- * Copyright (c) 2016 Sergey Kovalevich <inndie@gmail.com>
- */
+// ------------------------------------------------------------
+// Copyright (c) 2016-2018 Sergey Kovalevich <inndie@gmail.com>
+// ------------------------------------------------------------
 
 #ifndef MADLIFE_encoder_291116183743_MADLIFE
 #define MADLIFE_encoder_291116183743_MADLIFE

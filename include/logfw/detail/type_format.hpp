@@ -1,17 +1,15 @@
-/*
- * Copyright (c) 2016 Sergey Kovalevich <inndie@gmail.com>
- */
+// ------------------------------------------------------------
+// Copyright (c) 2016-2018 Sergey Kovalevich <inndie@gmail.com>
+// ------------------------------------------------------------
 
 #ifndef MADLIFE_type_format_291116174657_MADLIFE
 #define MADLIFE_type_format_291116174657_MADLIFE
 
 #include <cstdint>
 #include <string>
-#include "../common.hpp"
 #include "meta.hpp"
 
-namespace logfw {
-namespace detail {
+namespace logfw::detail {
 
 /* Handle compile-time types */
 template< class T >
@@ -73,7 +71,7 @@ struct type_format< char[N] >
     using type = char_list< 's' >;
 };
 template<>
-struct type_format< string_view >
+struct type_format< std::string_view >
 {
     using type = char_list< 's' >;
 };
@@ -98,7 +96,6 @@ struct type_format< T* >
     using type = char_list< 'p' >;
 };
 
-} /* namespace detail */
-} /* namespace logfw */
+} // namespace logfw::detail
 
 #endif /* MADLIFE_type_format_291116174657_MADLIFE */
