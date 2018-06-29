@@ -9,7 +9,7 @@
 #include <string>
 #include "meta.hpp"
 
-namespace logfw::detail {
+namespace logfw::details {
 
 /* Handle compile-time types */
 template< class T >
@@ -96,6 +96,6 @@ struct type_format< T* >
     using type = char_list< 'p' >;
 };
 
-} // namespace logfw::detail
+} // namespace logfw::details
 
 #endif /* MADLIFE_type_format_291116174657_MADLIFE */

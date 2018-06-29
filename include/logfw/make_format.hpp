@@ -5,11 +5,11 @@
 #ifndef MADLIFE_make_format_291116173253_MADLIFE
 #define MADLIFE_make_format_291116173253_MADLIFE
 
-#include "detail/meta.hpp"
-#include "detail/type_format.hpp"
+#include "details/meta.hpp"
+#include "details/type_format.hpp"
 
 namespace logfw {
-namespace detail {
+namespace details {
 
 /* Represent a type in char-sequence */
 template< class T, typename FormatSpec >
@@ -70,7 +70,7 @@ template< class TypeList >
 struct format_impl< null_type, TypeList >
 {
     using type = null_type;
-    static_assert( detail::always_false< TypeList >::value,
+    static_assert( details::always_false< TypeList >::value,
             "There are more vars than format tokens" );
 };
 template< class StringList, class TypeList >
@@ -119,7 +119,7 @@ struct format_impl< list< C, StringList >, TypeList >
     using type = list< C, typename format_impl< StringList, TypeList >::type >;
 };
 
-} /* namespace detail */
+} /* namespace details */
 
 /**
  * Construct format object.
@@ -128,10 +128,10 @@ struct format_impl< list< C, StringList >, TypeList >
  * make_format<...>::size() - size of line
  */
 template< class StringHolder, class... Args >
-using make_format = detail::stringify<
-    typename detail::format_impl<
-        detail::string_list< StringHolder >,
-        detail::make_list< Args...>
+using make_format = details::stringify<
+    typename details::format_impl<
+        details::string_list< StringHolder >,
+        details::make_list< Args...>
     >::type
 >;
 

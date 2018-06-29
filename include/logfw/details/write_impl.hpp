@@ -8,7 +8,7 @@
 #include <iomanip>
 #include "../decoder.hpp"
 
-namespace logfw::detail {
+namespace logfw::details {
 
 template< char Ch >
 constexpr bool next_is(std::string_view str, std::size_t index)
@@ -170,6 +170,6 @@ LOGFW_FORCE_INLINE void write_arg(std::ostream& os, std::string_view spec, decod
     }
 }
 
-} // namespace logfw::detail
+} // namespace logfw::details
 
 #endif /* MADLIFE_write_impl_031216001659_MADLIFE */

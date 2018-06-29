@@ -7,9 +7,9 @@
 
 #include <cassert>
 
-#include "detail/meta.hpp"
-#include "detail/encode_impl.hpp"
-#include "detail/type_format.hpp"
+#include "details/meta.hpp"
+#include "details/encode_impl.hpp"
+#include "details/type_format.hpp"
 
 namespace logfw {
 
@@ -33,7 +33,7 @@ public:
     template< class T >
     LOGFW_FORCE_INLINE void decode(T& value)
     {
-        const std::size_t used = detail::arg_io< T >::decode(value, buffer_, size_);
+        const std::size_t used = details::arg_io< T >::decode(value, buffer_, size_);
 
         assert( used <= size_ );
 
@@ -45,8 +45,8 @@ public:
     template< class T >
     static bool is(std::string_view str)
     {
-        using raw_type = detail::clear_type< T >;
-        using fmt = detail::stringify< typename detail::type_format< raw_type >::type >;
+        using raw_type = details::clear_type< T >;
+        using fmt = details::stringify< typename details::type_format< raw_type >::type >;
         static std::string_view format(fmt::data(), fmt::size());
         return format == str;
     }

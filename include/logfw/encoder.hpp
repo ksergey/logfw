@@ -5,7 +5,7 @@
 #ifndef MADLIFE_encoder_291116183743_MADLIFE
 #define MADLIFE_encoder_291116183743_MADLIFE
 
-#include "detail/encode_impl.hpp"
+#include "details/encode_impl.hpp"
 
 namespace logfw {
 
@@ -19,7 +19,7 @@ struct encoder
     template< class... Args >
     LOGFW_FORCE_INLINE static std::size_t encode(char* buffer, const Args&... args)
     {
-        return detail::encode_impl< Args... >::encode(args..., buffer);
+        return details::encode_impl< Args... >::encode(args..., buffer);
     }
 
     /**
@@ -29,7 +29,7 @@ struct encoder
     template< class... Args >
     LOGFW_FORCE_INLINE static constexpr std::size_t max_bytes_required()
     {
-        return detail::encode_impl< Args... >::max_bytes_required();
+        return details::encode_impl< Args... >::max_bytes_required();
     }
 
     /**
@@ -39,7 +39,7 @@ struct encoder
     template< class... Args >
     LOGFW_FORCE_INLINE static constexpr std::size_t bytes_required(const Args&... args)
     {
-        return detail::encode_impl< Args... >::bytes_required(args...);
+        return details::encode_impl< Args... >::bytes_required(args...);
     }
 };
 

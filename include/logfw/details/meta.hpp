@@ -10,7 +10,7 @@
 
 #include "../compiler.hpp"
 
-namespace logfw::detail {
+namespace logfw::details {
 
 /* null list type */
 struct null_type
@@ -172,6 +172,6 @@ using clear_type = std::conditional_t<
         std::remove_cv_t< T >
 >;
 
-} // namespace logfw::detail
+} // namespace logfw::details
 
 #endif /* MADLIFE_meta_291116165708_MADLIFE */

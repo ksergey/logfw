@@ -12,7 +12,9 @@
 #include <string>
 #include <type_traits>
 
-namespace logfw::detail {
+#include "../compiler.hpp"
+
+namespace logfw::details {
 
 /**
  * Maximum length of loggable string.
@@ -261,6 +263,6 @@ struct encode_impl< T, Args... >
     }
 };
 
-} // namespace logfw::detail
+} // namespace logfw::details
 
 #endif /* MADLIFE_encode_impl_021216225339_MADLIFE */

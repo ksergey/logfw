@@ -9,7 +9,7 @@
 
 #include "compiler.hpp"
 #include "decoder.hpp"
-#include "detail/write_impl.hpp"
+#include "details/write_impl.hpp"
 
 namespace logfw {
 
@@ -24,7 +24,7 @@ LOGFW_FORCE_INLINE void write(std::ostream& os, std::string_view fmt, const char
 
         if (ch == '{') {
 
-            if (detail::next_is< '{' >(fmt, index)) {
+            if (details::next_is< '{' >(fmt, index)) {
                 ++index;
                 os << ch;
             } else {
@@ -35,7 +35,7 @@ LOGFW_FORCE_INLINE void write(std::ostream& os, std::string_view fmt, const char
                 }
 
                 /* print arg */
-                detail::write_arg(os, fmt.substr(index + 1, found - index - 1), dec);
+                details::write_arg(os, fmt.substr(index + 1, found - index - 1), dec);
 
                 /* skip specifier */
                 index = found;
@@ -43,7 +43,7 @@ LOGFW_FORCE_INLINE void write(std::ostream& os, std::string_view fmt, const char
 
         } else if (ch == '}') {
 
-            if (LOGFW_LIKELY(detail::next_is< '}' >(fmt, index))) {
+            if (LOGFW_LIKELY(details::next_is< '}' >(fmt, index))) {
                 ++index;
                 os << ch;
             } else {
